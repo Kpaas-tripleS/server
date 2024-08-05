@@ -1,5 +1,7 @@
 package com.tripleS.server.user.domain;
 
+import com.tripleS.server.user.domain.type.SelfAuth;
+import com.tripleS.server.user.domain.type.SnsAuth;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -30,4 +32,15 @@ public class User {
 
     @Column(name = "login_type")
     private String loginType;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToOne
+    @JoinColumn(name = "selfauth_id")
+    private SelfAuth SelfAuthId;
+
+    @OneToOne
+    @JoinColumn(name = "snsauth_id")
+    private SnsAuth SnsAuthId;
 }
