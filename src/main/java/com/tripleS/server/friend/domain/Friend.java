@@ -16,12 +16,16 @@ public class Friend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "win_count")
+    private Long winCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Friend(User user) {
+    public Friend(Long winCount, User user) {
+        this.winCount = winCount;
         this.user = user;
     }
 }
