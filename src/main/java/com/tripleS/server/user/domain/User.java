@@ -42,19 +42,16 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "local_pw")
     private String password;
 
-    @Column(name = "score")
-    private Long score;
-
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
     public User(String name, String phone, String nickname, Grade grade, Long win_count,
-                LoginType loginType, String email, String password, Long score, Role role) {
+                LoginType loginType, String email, String password, Role role) {
         this.name = name;
         this.phone = phone;
         this.nickname = nickname;
@@ -63,7 +60,6 @@ public class User {
         this.loginType = loginType;
         this.email = email;
         this.password = password;
-        this.score = score;
         this.role = role;
     }
 }
