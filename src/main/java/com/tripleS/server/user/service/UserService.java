@@ -1,7 +1,9 @@
 package com.tripleS.server.user.service;
 
-import com.tripleS.server.user.domain.User;
-import com.tripleS.server.user.dto.SignUpDto;
+import com.tripleS.server.user.dto.request.SignUpRequest;
+import com.tripleS.server.user.exception.EmailDuplicatedException;
+import com.tripleS.server.user.exception.NicknameDuplicatedException;
+import com.tripleS.server.user.exception.errorcode.UserErrorCode;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,19 +16,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void signUp (SignUpDto signUpDto) {
-        userRepository.findByEmail(signUpDto.email())
-                .orElseThrow(() -> new RuntimeException("이미 존재하는 이메일입니다."));
+    @Transactional
+    public void signUp (SignUpRequest signUpRequest) {
 
-        userRepository.findByNickname(signUpDto.nickname())
-                .orElseThrow(() -> new RuntimeException("이미 존재하는 닉네임입니다."));
+        if (userRepository.existsByEmail(signUpRequest.email())) {
+            throw new EmailDuplicatedException(UserErrorCode.EMAIL_DUPLICATED);
+        }
+        if (userRepository.existsByNickname(signUpRequest.nickname())) {
+            throw new NicknameDuplicatedException(UserErrorCode.NICKNAME_DUPLICATED);
+        }
 
-        User user = User.builder()
-                .email(signUpDto.email())
-                .password(signUpDto.password()) //비밀번호 암호화 필요함
-                .nickname(signUpDto.nickname())
-                .build();
-
-        userRepository.save(user);
+        userRepository.save(signUpRequest.toEntity());
     }
 }

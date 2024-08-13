@@ -1,4 +1,4 @@
-package com.tripleS.server.global.dto;
+package com.tripleS.server.user.dto;
 
 public record JwtTokenDto(
         String accessToken,
