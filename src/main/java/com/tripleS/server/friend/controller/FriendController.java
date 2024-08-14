@@ -6,6 +6,7 @@ import com.tripleS.server.global.dto.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class FriendController {
 
     private final FriendService friendService;
 
+    //친구 목록 조회하기
     @GetMapping("/friends")
     public ResponseEntity<ResponseTemplate<Object>> getFriends(@RequestParam Long userId) {
         //토큰 아직 안해서 userId 임의로 함.
@@ -26,5 +28,16 @@ public class FriendController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseTemplate.from(friends));
+    }
+
+    //친구 삭제하기
+    @DeleteMapping("/friends")
+    public ResponseEntity<Object> deleteFriend (@RequestParam Long userId, @RequestParam Long friendId) {
+
+        friendService.deleteFriends(userId, friendId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userId +"의"+ friendId +"가 삭제되었습니다.");
     }
 }
