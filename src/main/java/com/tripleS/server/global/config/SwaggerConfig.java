@@ -2,7 +2,6 @@ package com.tripleS.server.global.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -15,8 +14,7 @@ import java.util.Collections;
 @OpenAPIDefinition(
         info = @Info(title = "tripleS API 명세서",
                 description = "tripleS API 명세서",
-                version = "v1"),
-        servers = @Server(url = "/", description = "Default Server URL") // Server 정보 추가
+                version = "v1")
 )
 @Configuration
 public class SwaggerConfig {
