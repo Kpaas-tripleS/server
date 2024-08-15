@@ -1,5 +1,6 @@
 package com.tripleS.server.global.exception.handler;
 
+import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.global.exception.errorcode.ErrorCode;
 import com.tripleS.server.global.exception.errorcode.GlobalErrorCode;
 import com.tripleS.server.global.exception.response.ErrorResponse;
@@ -21,6 +22,11 @@ import java.util.List;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(FriendNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFound(final FriendNotFoundException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
 
     @ExceptionHandler(EmailDuplicatedException.class)
     public ResponseEntity<Object> handleAnswerQuizNotFound(final EmailDuplicatedException e) {
