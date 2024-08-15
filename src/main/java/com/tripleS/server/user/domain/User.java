@@ -54,7 +54,6 @@ public class User {
     private Role role;
 
     @Column(name ="profile_image")
-    @Enumerated(EnumType.STRING)
     private String profile_image;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
