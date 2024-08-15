@@ -20,8 +20,13 @@ public class Friend {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "friend_id")
+    private User friend;
+
     @Builder
-    public Friend(User user) {
+    public Friend(User user, User friend) {
         this.user = user;
+        this.friend = friend;
     }
 }

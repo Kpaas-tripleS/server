@@ -1,11 +1,10 @@
 package com.tripleS.server.friend.controller;
 
-import com.tripleS.server.friend.dto.response.GetFriendsResponse;
+import com.tripleS.server.friend.dto.response.FriendResponse;
+import com.tripleS.server.friend.dto.response.FriendResponseList;
 import com.tripleS.server.friend.service.FriendService;
 import com.tripleS.server.global.dto.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,23 +20,20 @@ public class FriendController {
 
     //친구 목록 조회하기
     @GetMapping("/friends")
-    public ResponseEntity<ResponseTemplate<Object>> getFriends(@RequestParam Long userId) {
-        //토큰 아직 안해서 userId 임의로 함.
-        List<GetFriendsResponse> friends = friendService.getFriends(userId);
+    public ResponseTemplate<?> getFriends(@RequestParam Long userId) {
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(friends));
+        //토큰 아직 안해서 userId 임의로 함.
+        List<FriendResponse> friends = friendService.getFriendList(userId);
+
+        return ResponseTemplate.from(FriendResponseList.from(friends));
     }
 
     //친구 삭제하기
     @DeleteMapping("/friends")
-    public ResponseEntity<Object> deleteFriend (@RequestParam Long userId, @RequestParam Long friendId) {
+    public ResponseTemplate<?> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) {
 
-        friendService.deleteFriends(userId, friendId);
+        friendService.deleteFriend(userId, friendId);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userId +"의"+ friendId +"가 삭제되었습니다.");
+        return ResponseTemplate.EMPTY_RESPONSE;
     }
 }

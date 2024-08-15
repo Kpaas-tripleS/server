@@ -1,5 +1,6 @@
 package com.tripleS.server.user.domain;
 
+import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
 import com.tripleS.server.user.domain.type.Role;
@@ -8,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -49,9 +53,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name ="profile_image")
+    @Enumerated(EnumType.STRING)
+    private String profile_image;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Friend> friendList = new ArrayList<>();
+
     @Builder
     public User(String name, String phone, String nickname, Grade grade, Long win_count,
-                LoginType loginType, String email, String password, Role role) {
+                LoginType loginType, String email, String password, Role role, String profile_image) {
         this.name = name;
         this.phone = phone;
         this.nickname = nickname;
@@ -61,5 +72,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.profile_image = profile_image;
     }
 }
