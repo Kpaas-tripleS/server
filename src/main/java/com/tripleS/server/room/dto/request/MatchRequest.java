@@ -1,7 +1,7 @@
 package com.tripleS.server.room.dto.request;
 
 import java.time.LocalDateTime;
-
+//matchrequest
 public class MatchRequest {
 
     private Long userId;

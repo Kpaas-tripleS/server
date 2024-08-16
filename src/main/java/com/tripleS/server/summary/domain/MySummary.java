@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+//mysummary
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

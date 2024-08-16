@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+//room
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

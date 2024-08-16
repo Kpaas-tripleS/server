@@ -4,6 +4,7 @@ import com.tripleS.server.global.exception.errorcode.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+//nicknameduplicatedexception
 @Getter
 @RequiredArgsConstructor
 public class NicknameDuplicatedException extends RuntimeException {

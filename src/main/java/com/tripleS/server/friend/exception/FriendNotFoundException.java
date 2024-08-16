@@ -10,3 +10,4 @@ public class FriendNotFoundException extends RuntimeException {
 
     private final ErrorCode errorCode;
 }
+//friendnotfoundexception

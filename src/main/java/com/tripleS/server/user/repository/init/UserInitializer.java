@@ -12,6 +12,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 
+//userIntializer
 @Slf4j
 @Order(1)
 @RequiredArgsConstructor

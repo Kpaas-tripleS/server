@@ -4,6 +4,7 @@ import com.tripleS.server.global.exception.errorcode.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+//emailduplicatedexception
 @Getter
 @RequiredArgsConstructor
 public class EmailDuplicatedException extends RuntimeException {

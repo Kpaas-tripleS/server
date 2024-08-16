@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+//article
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

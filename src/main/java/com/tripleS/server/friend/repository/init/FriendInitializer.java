@@ -43,3 +43,4 @@ public class FriendInitializer implements ApplicationRunner {
         }
     }
 }
+//findIntializer
