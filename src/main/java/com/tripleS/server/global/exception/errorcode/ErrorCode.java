@@ -25,4 +25,3 @@ public interface ErrorCode {
      */
     String getMessage();
 }
-//errorcode

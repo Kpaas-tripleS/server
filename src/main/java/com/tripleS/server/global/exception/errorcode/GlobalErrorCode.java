@@ -20,4 +20,3 @@ public enum GlobalErrorCode implements ErrorCode {
     private final HttpStatus httpStatus;
     private final String message;
 }
-//glabalerrorcode

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-//roomrepository
 @Repository
 public interface RoomRepository  extends JpaRepository<Room, Long> {
 

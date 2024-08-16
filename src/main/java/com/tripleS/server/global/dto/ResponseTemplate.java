@@ -41,4 +41,3 @@ public record ResponseTemplate<T>(
                 .build();
     }
 }
-//responsetemplate

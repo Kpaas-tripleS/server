@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-//usererrocode
 @Getter
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {

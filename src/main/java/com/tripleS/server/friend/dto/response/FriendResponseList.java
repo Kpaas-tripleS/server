@@ -9,4 +9,3 @@ public record FriendResponseList(
         return new FriendResponseList(friendResponseList);
     }
 }
-//friendresponselist

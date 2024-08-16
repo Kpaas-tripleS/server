@@ -5,7 +5,6 @@ import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
 import com.tripleS.server.user.domain.type.Role;
 
-//signuprequest
 public record SignUpRequest(
         String name,
         String email,

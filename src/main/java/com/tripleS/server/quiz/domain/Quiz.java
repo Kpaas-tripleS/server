@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-//quiz
-
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
