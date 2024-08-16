@@ -53,6 +53,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // profile 추가
     @Column(name ="profile_image")
     private String profile_image;
 
