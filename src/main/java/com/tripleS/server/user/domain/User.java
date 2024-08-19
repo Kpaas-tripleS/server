@@ -55,14 +55,17 @@ public class User {
 
     // profile 추가
     @Column(name ="profile_image")
-    private String profile_image;
+    private String profileImage;
+
+    @Column(name ="refresh_token")
+    private String refreshToken;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Friend> friendList = new ArrayList<>();
 
     @Builder
     public User(String name, String phone, String nickname, Grade grade, Long win_count,
-                LoginType loginType, String email, String password, Role role, String profile_image) {
+                LoginType loginType, String email, String password, Role role, String profile_image, String refreshToken) {
         this.name = name;
         this.phone = phone;
         this.nickname = nickname;
@@ -72,6 +75,11 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.profile_image = profile_image;
+        this.profileImage = profile_image;
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

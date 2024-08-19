@@ -2,6 +2,7 @@ package com.tripleS.server.user.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.tripleS.server.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
+
+    private final UserRepository userRepository;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -81,6 +84,19 @@ public class JwtService {
 
     }
 
+    public Optional<String> extreactEmail(String accessToken){
+        try {
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(accessToken)
+                    .getClaim("email")
+                    .asString());
+        } catch (Exception e) {
+            log.error("유효하지 않은 access token: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
+
     public boolean validateAccessToken(String accessToken) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey))
@@ -89,6 +105,31 @@ public class JwtService {
             return true;
         } catch (Exception e) {
             log.error("유효하지 않은 access token: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    public void updateRefreshToken(String email, String refreshToken) {
+        userRepository.findByEmail(email)
+                .ifPresentOrElse(
+                        user -> {
+                            user.updateRefreshToken(refreshToken);
+                            userRepository.save(user);
+                        },
+                        () -> {
+                            throw new RuntimeException("일치하는 회원이 없습니다.");
+                        }
+                );
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(token);
+            return true;
+        } catch (Exception e) {
+            log.error("유효하지 않은 token: {}", e.getMessage());
             return false;
         }
     }
