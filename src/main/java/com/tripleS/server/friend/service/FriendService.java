@@ -4,6 +4,7 @@ import com.tripleS.server.friend.dto.response.FriendResponse;
 import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.friend.exception.errorcode.FriendErrorCode;
 import com.tripleS.server.friend.repository.FriendRepository;
+import com.tripleS.server.friend.repository.BeFriendRepository;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,3 +46,4 @@ public class FriendService {
                         });
     }
 }
+
