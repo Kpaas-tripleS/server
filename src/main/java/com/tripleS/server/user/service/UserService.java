@@ -37,8 +37,12 @@ public class UserService {
 
     @Transactional
     public LoginResponse login(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
+        }
 
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
