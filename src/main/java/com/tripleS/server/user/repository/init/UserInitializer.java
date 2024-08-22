@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
 @Order(1)
@@ -19,6 +20,7 @@ import org.springframework.core.annotation.Order;
 public class UserInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -29,10 +31,10 @@ public class UserInitializer implements ApplicationRunner {
                     .name("user")
                     .email("user1")
                     .grade(Grade.THREE)
-                    .loginType(LoginType.KAKAO)
+                    .loginType(LoginType.LOCAL)
                     .nickname("user1")
                     .phone("010-1111-1111")
-                    .password("1234")
+                    .password(passwordEncoder.encode("1234"))
                     .role(Role.ADMIN)
                     .win_count(0L)
                     .profile_image(null)
@@ -41,10 +43,10 @@ public class UserInitializer implements ApplicationRunner {
                     .name("user2")
                     .email("user2")
                     .grade(Grade.THREE)
-                    .loginType(LoginType.KAKAO)
+                    .loginType(LoginType.LOCAL)
                     .nickname("user2")
                     .phone("010-2222-2222")
-                    .password("1234")
+                    .password(passwordEncoder.encode("1234"))
                     .role(Role.ADMIN)
                     .win_count(0L)
                     .profile_image(null)
