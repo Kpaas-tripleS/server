@@ -1,8 +1,5 @@
 package com.tripleS.server.friend.controller;
 
-import com.tripleS.server.friend.domain.BeFriend;
-import com.tripleS.server.friend.dto.request.BeFriendRequest;
-import com.tripleS.server.friend.dto.response.FriendResponseList;
 import com.tripleS.server.friend.service.BeFriendService;
 import com.tripleS.server.global.dto.ResponseTemplate;
 import com.tripleS.server.user.service.JwtTokenProvider;
