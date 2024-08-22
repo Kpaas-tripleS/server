@@ -6,13 +6,15 @@ import com.tripleS.server.user.domain.User;
 public record BeFriendRequest(
         Long receiver,
         Long requester,
-        boolean isAccepted
+        boolean isAccepted,
+        String nickname
 ) {
-    public BeFriend toEntity(User requester, User receiver) {
+    public BeFriend toEntity(User requester, User receiver, boolean isAccepted, String nickname) {
         return BeFriend.builder()
                 .requester(requester)
                 .receiver(receiver)
                 .isAccepted(isAccepted)
+                .nickname(nickname)
                 .build();
     }
 }

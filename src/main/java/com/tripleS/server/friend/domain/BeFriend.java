@@ -18,6 +18,9 @@ public class BeFriend {
     @Column(name = "is_accepted")
     private boolean isAccepted = false;
 
+    @Column(name = "nickname")
+    private String nickname;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
     private User requester;
@@ -27,9 +30,10 @@ public class BeFriend {
     private User receiver;
 
     @Builder
-    public BeFriend(User requester, User receiver, boolean isAccepted) {
+    public BeFriend(User requester, User receiver, boolean isAccepted, String nickname) {
         this.requester = requester;
         this.receiver = receiver;
         this.isAccepted = isAccepted;
+        this.nickname = nickname;
     }
 }

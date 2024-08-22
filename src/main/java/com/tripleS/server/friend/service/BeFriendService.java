@@ -1,5 +1,6 @@
 package com.tripleS.server.friend.service;
 
+import com.tripleS.server.friend.domain.BeFriend;
 import com.tripleS.server.friend.dto.request.BeFriendRequest;
 import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.friend.exception.errorcode.FriendErrorCode;
@@ -11,6 +12,8 @@ import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 @Service
@@ -32,9 +35,23 @@ public class BeFriendService {
         BeFriendRequest friendRequest = new BeFriendRequest(
                 receiver.getId(),
                 requester.getId(),
-                false
+                false,
+                requester.getNickname()
         );
 
-        beFriendRepository.save(friendRequest.toEntity(requester, receiver));
+        beFriendRepository.save(friendRequest.toEntity(requester, receiver, false, requester.getNickname()));
+    }
+
+    public List<String> getFriendRequestList(Long userId) {
+
+        User receiver = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        List<BeFriend> friendRequestList = beFriendRepository.findByReceiver(receiver);
+
+        return friendRequestList.stream()
+                .filter(beFriend -> !beFriend.isAccepted())
+                .map(beFriend -> beFriend.getRequester().getNickname())
+                .toList();
     }
 }
