@@ -35,4 +35,22 @@ public class BeFriendController {
 
         return ResponseTemplate.from(BeFriendResponseList.from(friendRequestList));
     }
+
+    @PostMapping("/accept")
+    public ResponseTemplate<?> acceptFriendRequest(@AuthenticationPrincipal AuthUser authUser,
+                                                  @RequestBody BeFriendResponse beFriendResponse) {
+
+        beFriendService.acceptFriendRequest(authUser.userId(), beFriendResponse);
+
+        return ResponseTemplate.EMPTY_RESPONSE;
+    }
+
+    @DeleteMapping("/accept")
+    public ResponseTemplate<?> rejectFriendRequest(@AuthenticationPrincipal AuthUser authUser,
+                                                  @RequestBody BeFriendResponse beFriendResponse) {
+
+        beFriendService.rejectFriendRequest(beFriendResponse);
+
+        return ResponseTemplate.EMPTY_RESPONSE;
+    }
 }
