@@ -15,8 +15,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id = :userId")
     Optional<User> findByIdFetchFriend(Long userId);
 
+    @EntityGraph(attributePaths = {"beFriendList", "beFriendList.requester"})
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    Optional<User> findByIdFetchBeFriend(Long userId);
+
     Boolean existsByEmail(String email);
     Boolean existsByNickname(String nickname);
     Optional<User> findByEmail(String email);
-    Optional<User> findByNickname(String nickname);
 }

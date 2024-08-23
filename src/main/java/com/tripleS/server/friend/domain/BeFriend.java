@@ -11,15 +11,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BeFriend {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "is_accepted")
-    private boolean isAccepted = false;
-
-    @Column(name = "nickname")
-    private String nickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
@@ -30,10 +25,12 @@ public class BeFriend {
     private User receiver;
 
     @Builder
-    public BeFriend(User requester, User receiver, boolean isAccepted, String nickname) {
+    public BeFriend(User requester, User receiver) {
         this.requester = requester;
         this.receiver = receiver;
-        this.isAccepted = isAccepted;
-        this.nickname = nickname;
+    }
+
+    public String getRequesterNickname() {
+        return this.requester.getNickname();
     }
 }
