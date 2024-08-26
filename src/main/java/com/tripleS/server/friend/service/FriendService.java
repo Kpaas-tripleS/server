@@ -1,10 +1,13 @@
 package com.tripleS.server.friend.service;
 
+import com.tripleS.server.friend.dto.request.BeFriendRequest;
 import com.tripleS.server.friend.dto.response.FriendResponse;
 import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.friend.exception.errorcode.FriendErrorCode;
 import com.tripleS.server.friend.repository.FriendRepository;
 import com.tripleS.server.user.domain.User;
+import com.tripleS.server.user.exception.UserNotFoundException;
+import com.tripleS.server.user.exception.errorcode.UserErrorCode;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

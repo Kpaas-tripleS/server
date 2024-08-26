@@ -16,6 +16,9 @@ public class Friend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "is_accepted")
+    private Boolean isAccepted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -25,8 +28,9 @@ public class Friend {
     private User friend;
 
     @Builder
-    public Friend(User user, User friend) {
+    public Friend(User user, User friend, Boolean isAccepted) {
         this.user = user;
         this.friend = friend;
+        this.isAccepted = isAccepted;
     }
 }

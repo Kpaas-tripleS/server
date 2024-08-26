@@ -73,8 +73,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BeFriend> beFriendList = new ArrayList<>();
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Friend> beFriendList = new ArrayList<>();
 
     @Builder
     public User(String name, String phone, String nickname, Grade grade, Long win_count,

@@ -1,5 +1,6 @@
 package com.tripleS.server.friend.controller;
 
+import com.tripleS.server.friend.dto.request.BeFriendRequest;
 import com.tripleS.server.friend.dto.response.FriendResponse;
 import com.tripleS.server.friend.dto.response.FriendResponseList;
 import com.tripleS.server.friend.service.FriendService;

@@ -17,9 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BeFriendController {
 
+
     private final BeFriendService beFriendService;
 
-    @PostMapping
+    @PostMapping("/be-friends")
     public ResponseTemplate<?> sendFriendRequest(@AuthenticationPrincipal AuthUser authUser,
                                                  @RequestBody BeFriendRequest beFriendRequest) {
 
@@ -38,18 +39,18 @@ public class BeFriendController {
 
     @PostMapping("/accept")
     public ResponseTemplate<?> acceptFriendRequest(@AuthenticationPrincipal AuthUser authUser,
-                                                  @RequestBody BeFriendResponse beFriendResponse) {
+                                                  @RequestBody BeFriendRequest beFriendRequest) {
 
-        beFriendService.acceptFriendRequest(authUser.userId(), beFriendResponse);
+        beFriendService.acceptFriendRequest(authUser.userId(), beFriendRequest);
 
         return ResponseTemplate.EMPTY_RESPONSE;
     }
 
     @DeleteMapping("/accept")
     public ResponseTemplate<?> rejectFriendRequest(@AuthenticationPrincipal AuthUser authUser,
-                                                  @RequestBody BeFriendResponse beFriendResponse) {
+                                                  @RequestBody BeFriendRequest beFriendRequest) {
 
-        beFriendService.rejectFriendRequest(beFriendResponse);
+        beFriendService.rejectFriendRequest(beFriendRequest);
 
         return ResponseTemplate.EMPTY_RESPONSE;
     }
