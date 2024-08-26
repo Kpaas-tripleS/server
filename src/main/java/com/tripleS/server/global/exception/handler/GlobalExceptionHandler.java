@@ -6,6 +6,7 @@ import com.tripleS.server.global.exception.errorcode.GlobalErrorCode;
 import com.tripleS.server.global.exception.response.ErrorResponse;
 import com.tripleS.server.user.exception.EmailDuplicatedException;
 import com.tripleS.server.user.exception.NicknameDuplicatedException;
+import com.tripleS.server.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -22,6 +23,11 @@ import java.util.List;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFound(final UserNotFoundException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
 
     @ExceptionHandler(FriendNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFound(final FriendNotFoundException e) {
