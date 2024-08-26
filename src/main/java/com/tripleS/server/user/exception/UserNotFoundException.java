@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class NicknameDuplicatedException extends RuntimeException {
+public class UserNotFoundException extends RuntimeException {
 
     private final ErrorCode errorCode;
 }
-

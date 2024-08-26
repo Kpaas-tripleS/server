@@ -17,6 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id = :userId")
     Optional<User> findByIdFetchFriend(Long userId);
 
+    @EntityGraph(attributePaths = {"beFriendList", "beFriendList.requester"})
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    Optional<User> findByIdFetchBeFriend(Long userId);
+
     Boolean existsByEmail(String email);
     Boolean existsByNickname(String nickname);
 
@@ -24,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("UPDATE User u SET u.win_count = u.win_count + 1 WHERE u.id = :userId")
     void updateWinCount(Long userId);
+
+    Optional<User> findByEmail(String email);
+  
 }
