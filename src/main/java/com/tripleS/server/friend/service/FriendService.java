@@ -27,10 +27,8 @@ public class FriendService {
 
     public List<FriendResponse> getFriendList(Long userId) {
 
-        User user = userRepository.findByIdFetchFriend(userId)
+        User user = userRepository.findByIdWithFriends(userId)
                 .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
-
-        user.getFriendList().forEach(friend -> log.info("friend: {}", friend.getFriend().getNickname()));
 
         return user.getFriendList().stream()
                 .map(FriendResponse::from)

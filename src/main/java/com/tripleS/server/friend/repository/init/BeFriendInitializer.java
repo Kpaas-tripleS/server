@@ -39,33 +39,33 @@ public class BeFriendInitializer implements ApplicationRunner {
             List<Friend> friendList = new ArrayList<>();
 
             Friend beFriend1 = Friend.builder()
-                    .user(USER2)
-                    .friend(USER1)
-                    .isAccepted(false)
+                    .user(USER1)
+                    .friend(USER2)
+                    .isAccepted(true)
                     .build();
 
             Friend beFriend2 = Friend.builder()
-                    .user(USER3)
-                    .friend(USER1)
+                    .user(USER1)
+                    .friend(USER3)
                     .isAccepted(true)
                     .build();
 
             Friend beFriend3 = Friend.builder()
-                    .user(USER4)
-                    .friend(USER1)
-                    .isAccepted(true)
+                    .user(USER1)
+                    .friend(USER4)
+                    .isAccepted(false)
                     .build();
 
             Friend beFriend4 = Friend.builder()
-                    .user(USER5)
-                    .friend(USER1)
-                    .isAccepted(true)
+                    .user(USER1)
+                    .friend(USER5)
+                    .isAccepted(false)
                     .build();
 
             Friend beFriend5 = Friend.builder()
-                    .user(USER6)
-                    .friend(USER1)
-                    .isAccepted(true)
+                    .user(USER1)
+                    .friend(USER6)
+                    .isAccepted(false)
                     .build();
 
             friendList.add(beFriend1);

@@ -17,7 +17,7 @@ public class Friend {
     private Long id;
 
     @Column(name = "is_accepted")
-    private Boolean isAccepted = false;
+    private boolean isAccepted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -32,5 +32,9 @@ public class Friend {
         this.user = user;
         this.friend = friend;
         this.isAccepted = isAccepted;
+    }
+
+    public void accept() {
+        this.isAccepted = true;
     }
 }

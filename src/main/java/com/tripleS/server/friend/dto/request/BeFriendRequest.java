@@ -10,8 +10,8 @@ public record BeFriendRequest(
 ) {
     public Friend toEntity(User requester, User receiver, Boolean isAccepted) {
         return Friend.builder()
-                .user(requester)
-                .friend(receiver)
+                .user(receiver)
+                .friend(requester)
                 .isAccepted(isAccepted)
                 .build();
     }

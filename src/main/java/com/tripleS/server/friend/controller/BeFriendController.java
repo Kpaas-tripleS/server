@@ -20,7 +20,7 @@ public class BeFriendController {
 
     private final BeFriendService beFriendService;
 
-    @PostMapping("/be-friends")
+    @PostMapping
     public ResponseTemplate<?> sendFriendRequest(@AuthenticationPrincipal AuthUser authUser,
                                                  @RequestBody BeFriendRequest beFriendRequest) {
 

@@ -33,17 +33,17 @@ public class BeFriendService {
         User receiver = userRepository.findById(beFriendRequest.receiver())
                 .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
 
-        friendRepository.save(beFriendRequest.toEntity(requester, receiver, true));
+        friendRepository.save(beFriendRequest.toEntity(requester, receiver, false));
     }
 
     public List<BeFriendResponse> getFriendRequestList(Long userId) {
 
-        User receiver = userRepository.findByIdFetchBeFriend(userId)
-                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+        List<Friend> friendsList = friendRepository.findByUserIdAndIsAcceptedFalse(userId);
 
-        return receiver.getFriendList().stream()
-                .filter(Friend -> !Friend.getIsAccepted())
-                .map(BeFriendResponse::from)
+        return friendsList.stream()
+                .map(friend -> {
+                    return BeFriendResponse.from(friend);
+                })
                 .toList();
     }
 
@@ -56,14 +56,12 @@ public class BeFriendService {
         User requester = userRepository.findById(beFriendRequest.requester())
                 .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
-        friendRepository.findByUserIdAndFriendId(receiver.getId(), requester.getId())
-                .ifPresentOrElse(friend -> {
-                    beFriendRequest.toEntity(requester, receiver, true);
-                    friendRepository.save(friend);
-                }, () -> {
-                    throw new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND);
-                });
+        Friend friend = friendRepository.findByUserIdAndFriendId(receiver.getId(), requester.getId())
+                .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
 
+        friend.accept();
+
+        friendRepository.save(friend);
     }
 
     @Transactional
