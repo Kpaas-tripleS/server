@@ -1,4 +1,4 @@
-package com.tripleS.server.room.dto.request;
+package com.tripleS.server.match.dto.request;
 
 import java.time.LocalDateTime;
 
@@ -11,15 +11,7 @@ public class MatchRequest {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public LocalDateTime getCreateTime() {
         return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 }
