@@ -1,18 +1,18 @@
-package com.tripleS.server.room.domain;
+package com.tripleS.server.match.domain;
 
+import com.tripleS.server.match.domain.type.MatchType;
 import com.tripleS.server.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Entity
+@Table(name = "`match`")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Room {
+public class Match {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,24 +33,18 @@ public class Room {
     @JoinColumn(name = "leader", referencedColumnName = "id")
     private User leader;
 
+    @Column(name = "match_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MatchType matchType;
+
     @Builder
-    public Room(Boolean isMatch, LocalDateTime createTime, User follower, User leader) {
+    public Match(Boolean isMatch, LocalDateTime createTime, User follower, User leader, MatchType matchType) {
         this.isMatch = isMatch;
         this.createTime = createTime;
         this.follower = follower;
         this.leader = leader;
+        this.matchType = matchType;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setIsMatch(Boolean match) {
-        isMatch = match;
-    }
-
-    public void setFollower(User follower) {
-        this.follower = follower;
-    }
 }
 
