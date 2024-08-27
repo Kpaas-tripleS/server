@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @RestController
 public class NaverSearchController {
 
@@ -16,9 +14,19 @@ public class NaverSearchController {
     public NaverSearchController(NaverSearchService naverSearchService) {
         this.naverSearchService = naverSearchService;
     }
-
-    @GetMapping("/search/news")
-    public Mono<List<String>> searchNews(@RequestParam String query) {
+    //for test
+    @GetMapping("/url")
+    public Mono<String> searchUrl(@RequestParam String query) {
         return naverSearchService.searchNews(query);
+    }
+
+    @GetMapping("/content")
+    public Mono<String> searchContent(@RequestParam String url) {
+        return naverSearchService.scrapeNewsContent(url);
+    }
+
+    @GetMapping("/news")
+    public Mono<String> getNews(@RequestParam String query) {
+        return naverSearchService.getNews(query);
     }
 }
