@@ -3,6 +3,7 @@ package com.tripleS.server.user.service;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.dto.request.SignUpRequest;
 import com.tripleS.server.user.dto.response.LoginResponse;
+import com.tripleS.server.user.dto.response.findUserResponse;
 import com.tripleS.server.user.exception.EmailDuplicatedException;
 import com.tripleS.server.user.exception.NicknameDuplicatedException;
 import com.tripleS.server.user.exception.UserNotFoundException;
@@ -48,5 +49,12 @@ public class UserService {
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
 
         return LoginResponse.of(accessToken, refreshToken);
+    }
+
+    public findUserResponse findUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        return findUserResponse.of(user);
     }
 }

@@ -1,6 +1,5 @@
 package com.tripleS.server.user.domain;
 
-import com.tripleS.server.friend.domain.BeFriend;
 import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;

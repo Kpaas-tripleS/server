@@ -1,6 +1,5 @@
 package com.tripleS.server.friend.repository.init;
 
-import com.tripleS.server.friend.domain.BeFriend;
 import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.friend.repository.FriendRepository;
 import com.tripleS.server.global.util.DummyDataInit;
@@ -43,7 +42,6 @@ public class BeFriendInitializer implements ApplicationRunner {
                     .friend(USER2)
                     .isAccepted(true)
                     .build();
-
             Friend beFriend2 = Friend.builder()
                     .user(USER1)
                     .friend(USER3)
@@ -55,13 +53,11 @@ public class BeFriendInitializer implements ApplicationRunner {
                     .friend(USER4)
                     .isAccepted(false)
                     .build();
-
             Friend beFriend4 = Friend.builder()
                     .user(USER1)
                     .friend(USER5)
                     .isAccepted(false)
                     .build();
-
             Friend beFriend5 = Friend.builder()
                     .user(USER1)
                     .friend(USER6)

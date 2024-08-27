@@ -7,6 +7,8 @@ import com.tripleS.server.friend.service.BeFriendService;
 import com.tripleS.server.global.dto.AuthUser;
 import com.tripleS.server.global.dto.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +22,14 @@ public class BeFriendController {
 
     private final BeFriendService beFriendService;
 
-    @PostMapping
-    public ResponseTemplate<?> sendFriendRequest(@AuthenticationPrincipal AuthUser authUser,
-                                                 @RequestBody BeFriendRequest beFriendRequest) {
+    @PostMapping("/request")
+    public ResponseEntity<ResponseTemplate<?>> sendFriendRequest(@AuthenticationPrincipal AuthUser authUser,
+                                                                @RequestBody BeFriendRequest beFriendRequest) {
 
         beFriendService.sendFriendRequest(authUser.userId(), beFriendRequest);
 
-        return ResponseTemplate.EMPTY_RESPONSE;
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseTemplate.EMPTY_RESPONSE);
     }
 
     @GetMapping
@@ -37,21 +40,12 @@ public class BeFriendController {
         return ResponseTemplate.from(BeFriendResponseList.from(friendRequestList));
     }
 
-    @PostMapping("/accept")
-    public ResponseTemplate<?> acceptFriendRequest(@AuthenticationPrincipal AuthUser authUser,
-                                                  @RequestBody BeFriendRequest beFriendRequest) {
+    @PostMapping
+    public ResponseEntity<ResponseTemplate<?>> handleFriendRequest(@RequestBody BeFriendRequest beFriendRequest) {
 
-        beFriendService.acceptFriendRequest(authUser.userId(), beFriendRequest);
+        beFriendService.handleFriendRequest(beFriendRequest);
 
-        return ResponseTemplate.EMPTY_RESPONSE;
-    }
-
-    @DeleteMapping("/accept")
-    public ResponseTemplate<?> rejectFriendRequest(@AuthenticationPrincipal AuthUser authUser,
-                                                  @RequestBody BeFriendRequest beFriendRequest) {
-
-        beFriendService.rejectFriendRequest(beFriendRequest);
-
-        return ResponseTemplate.EMPTY_RESPONSE;
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseTemplate.EMPTY_RESPONSE);
     }
 }
