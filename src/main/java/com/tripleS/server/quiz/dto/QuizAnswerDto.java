@@ -3,7 +3,7 @@ package com.tripleS.server.quiz.dto;
 import lombok.Data;
 
 @Data
-public class quizAnswerDto {
+public class QuizAnswerDto {
     private Long userId;
     private String answer;
 

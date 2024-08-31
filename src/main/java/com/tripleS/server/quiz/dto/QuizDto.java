@@ -3,8 +3,8 @@ package com.tripleS.server.quiz.dto;
 import lombok.Data;
 
 @Data
-public class quizDto {
-    private Long id;
+public class QuizDto {
+    private Long quizId;
     private String question;
     private String choiceOne;
     private String choiceTwo;
