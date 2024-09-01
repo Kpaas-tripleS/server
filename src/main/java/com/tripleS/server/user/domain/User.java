@@ -88,6 +88,13 @@ public class User {
         this.refreshToken = refreshToken;
     }
 
+    public void updateUserInfo(String nickname, String password, String profileImage, String phoneNumber) {
+        this.nickname = nickname;
+        this.password = password;
+        this.profileImage = profileImage;
+        this.phone = phoneNumber;
+    }
+
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }

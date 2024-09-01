@@ -2,12 +2,12 @@ package com.tripleS.server.user.dto.response;
 
 import com.tripleS.server.user.domain.User;
 
-public record findUserResponse(
+public record FindUserResponse(
         Long userId,
         String nickname
 ) {
-    public static findUserResponse of(User user) {
-        return new findUserResponse(
+    public static FindUserResponse of(User user) {
+        return new FindUserResponse(
                 user.getId(),
                 user.getNickname()
         );

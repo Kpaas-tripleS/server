@@ -3,7 +3,8 @@ package com.tripleS.server.user.service;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.dto.request.SignUpRequest;
 import com.tripleS.server.user.dto.response.LoginResponse;
-import com.tripleS.server.user.dto.response.findUserResponse;
+import com.tripleS.server.user.dto.response.FindUserResponse;
+import com.tripleS.server.user.dto.response.GetUserInfoResponse;
 import com.tripleS.server.user.exception.EmailDuplicatedException;
 import com.tripleS.server.user.exception.NicknameDuplicatedException;
 import com.tripleS.server.user.exception.UserNotFoundException;
@@ -51,10 +52,31 @@ public class UserService {
         return LoginResponse.of(accessToken, refreshToken);
     }
 
-    public findUserResponse findUser(Long userId) {
+    public FindUserResponse findUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
-        return findUserResponse.of(user);
+        return FindUserResponse.of(user);
+    }
+
+    public GetUserInfoResponse getUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        return GetUserInfoResponse.of(user);
+    }
+
+    @Transactional
+    public void updateUserInfo(Long userId, GetUserInfoResponse getUserInfoResponse) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+
+        user.updateUserInfo(
+                getUserInfoResponse.nickname(),
+                getUserInfoResponse.password(),
+                getUserInfoResponse.profileImage(),
+                getUserInfoResponse.phoneNumber());
+
+        userRepository.save(user);
     }
 }
