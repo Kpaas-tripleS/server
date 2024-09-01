@@ -4,6 +4,7 @@ import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
 import com.tripleS.server.user.domain.type.Role;
+import com.tripleS.server.user.dto.response.GetUserInfoResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -66,9 +67,6 @@ public class User {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendList = new ArrayList<>();
 
@@ -85,17 +83,12 @@ public class User {
         this.password = password;
         this.role = role;
         this.profileImage = profile_image;
-        this.refreshToken = refreshToken;
     }
 
-    public void updateUserInfo(String nickname, String password, String profileImage, String phoneNumber) {
-        this.nickname = nickname;
-        this.password = password;
-        this.profileImage = profileImage;
-        this.phone = phoneNumber;
-    }
-
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void updateUserInfo(GetUserInfoResponse getUserInfoResponse) {
+        this.nickname = getUserInfoResponse.nickname();
+        this.password = getUserInfoResponse.password();
+        this.profileImage = getUserInfoResponse.profileImage();
+        this.phone = getUserInfoResponse.phoneNumber();
     }
 }

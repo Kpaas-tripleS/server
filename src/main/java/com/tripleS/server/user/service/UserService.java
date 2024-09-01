@@ -71,11 +71,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
-        user.updateUserInfo(
-                getUserInfoResponse.nickname(),
-                getUserInfoResponse.password(),
-                getUserInfoResponse.profileImage(),
-                getUserInfoResponse.phoneNumber());
+        user.updateUserInfo(getUserInfoResponse);
 
         userRepository.save(user);
     }
