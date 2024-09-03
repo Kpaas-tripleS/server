@@ -5,7 +5,7 @@ import com.tripleS.server.user.domain.type.Grade;
 import lombok.Builder;
 
 @Builder
-public record MatchingUserResponse(
+public record UserResponse(
         Long id,
         String name,
         String nickname,
@@ -13,12 +13,12 @@ public record MatchingUserResponse(
         Long win_count,
         Grade grade
 ) {
-    public static MatchingUserResponse from(User user) {
-        return MatchingUserResponse.builder()
+    public static UserResponse from(User user) {
+        return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .nickname(user.getNickname())
-                .profile_image(user.getProfile_image())
+                .profile_image(user.getProfileImage())
                 .win_count(user.getWin_count())
                 .grade(user.getGrade())
                 .build();
