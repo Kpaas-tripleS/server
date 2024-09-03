@@ -69,10 +69,10 @@ public class RandomMatchService {
         CompletableFuture<Void> future = new CompletableFuture<>();
         matchStatusFutures.put(matchId, future);
         ScheduledFuture<?> timeoutFuture = scheduler.schedule(() -> {
-            if (!future.isDone()) {
+            if (!future.isDone()) { //친구대결거절 메세지 2번 나오지 않도록 추후 수정
                 future.completeExceptionally(new TimeoutException("Match timeout"));
                 String destination = "/topic/matches/" + matchId + "/status";
-                messagingTemplate.convertAndSend(destination, "MATCH_TIMEOUT");
+                messagingTemplate.convertAndSend(destination, "MATCH_FAIL");
                 deleteMatch(matchId);
                 matchStatusFutures.remove(matchId);
             }
@@ -83,7 +83,7 @@ public class RandomMatchService {
                     .orElseThrow(() -> new MatchNotFoundException(MatchErrorCode.MATCH_NOT_FOUND));
             if (match.getIsMatch()) {
                 String destination = "/topic/matches/" + matchId + "/status";
-                messagingTemplate.convertAndSend(destination, "MATCH_COMPLETE");
+                messagingTemplate.convertAndSend(destination, "MATCH_COMPLETE"); //quizService.getRandomQuizzesForMatch()
                 future.complete(null);
                 if (!timeoutFuture.isDone()) {
                     timeoutFuture.cancel(false);
@@ -100,8 +100,8 @@ public class RandomMatchService {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(MatchErrorCode.MATCH_NOT_FOUND));
         MatchResult matchResult = matchResultRepository.findByMatchId(matchId);
-        matchRepository.delete(match);
         if(matchResult != null) matchResultRepository.delete(matchResult);
+        matchRepository.delete(match);
     }
 }
 

@@ -1,95 +1,109 @@
 package com.tripleS.server.match.controller;
 
-import com.tripleS.server.friend.dto.response.FriendResponseList;
+import com.tripleS.server.global.dto.AuthUser;
 import com.tripleS.server.global.dto.ResponseTemplate;
-import com.tripleS.server.match.domain.Match;
 import com.tripleS.server.match.dto.request.MatchRequest;
-import com.tripleS.server.match.dto.response.MatchInfoResponse;
 import com.tripleS.server.match.dto.response.MatchResponse;
 import com.tripleS.server.match.dto.response.MatchResponseList;
 import com.tripleS.server.match.dto.response.MatchResultResponse;
-import com.tripleS.server.match.service.FriendMatchService;
-import com.tripleS.server.match.service.MatchResultService;
-import com.tripleS.server.match.service.MatchService;
-import com.tripleS.server.match.service.RandomMatchService;
-import com.tripleS.server.quiz.domain.Quiz;
+import com.tripleS.server.match.dto.response.RankingResponseList;
+import com.tripleS.server.match.service.*;
+import com.tripleS.server.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class MatchController { //userId로 넘기는건 다 토큰으로 바꾸기
+public class MatchController {
 
     private final RandomMatchService randomMatchService;
     private final FriendMatchService friendMatchService;
     private final MatchService matchService;
     private final MatchResultService matchResultService;
+    private final MatchRankingService matchRankingService;
 
     @PostMapping("/matches")
     @ResponseBody
-    public Long findMatch(@RequestBody MatchRequest matchRequest) {
-        return randomMatchService.findMatch(matchRequest.getUserId(), matchRequest.getCreateTime());
+    public Long findMatch(@AuthenticationPrincipal AuthUser authUser, @RequestBody MatchRequest matchRequest) {
+        return randomMatchService.findMatch(authUser.userId(), matchRequest.creatTime());
     }
 
-    @PostMapping("/matches/{matchId}/status")
-    public void MatchStatus(@PathVariable Long matchId) {
+    @GetMapping("/matches/{matchId}/status")
+    @ResponseBody
+    public ResponseTemplate<?> matchStatus(@PathVariable Long matchId) {
         randomMatchService.matchStatus(matchId);
+        return ResponseTemplate.EMPTY_RESPONSE;
     }
 
     @PostMapping("/matches/{friendId}")
-    public Long friendMatch(@PathVariable Long friendId, @RequestBody MatchRequest matchRequest) {
-        return friendMatchService.friendMatch(friendId, matchRequest);
+    @ResponseBody
+    public Long friendMatch(@PathVariable Long friendId, @AuthenticationPrincipal AuthUser authUser, @RequestBody MatchRequest matchRequest) {
+        return friendMatchService.friendMatch(friendId, authUser.userId(), matchRequest.creatTime());
     }
 
     @GetMapping("/matches/friend")
-    public ResponseTemplate<?> matchList(Long userId) {
-        List<MatchResponse> friendMatches = friendMatchService.matchList(userId);
+    @ResponseBody
+    public ResponseTemplate<?> matchList(@AuthenticationPrincipal AuthUser authUser) {
+        List<MatchResponse> friendMatches = friendMatchService.matchList(authUser.userId());
         return ResponseTemplate.from(MatchResponseList.from(friendMatches));
     }
 
     @PostMapping("matches/{matchId}/accept")
+    @ResponseBody
     public ResponseTemplate<?> acceptMatch(@PathVariable Long matchId) {
         friendMatchService.acceptMatch(matchId);
         return ResponseTemplate.EMPTY_RESPONSE;
     }
 
     @PostMapping("/matches/{matchId}/reject")
+    @ResponseBody
     public ResponseTemplate<?> rejectMatch(@PathVariable Long matchId) {
         friendMatchService.rejectMatch(matchId);
         return ResponseTemplate.EMPTY_RESPONSE;
     }
 
-    /*
-    @GetMapping("/matches/{matchId}/start")
+    @DeleteMapping("/matches/{matchId}")
     @ResponseBody
-    public MatchInfoResponse startMatch(@PathVariable Long matchId, Long userId) {
-        return matchService.startMatch(matchId, userId);
+    public ResponseTemplate<?> deleteMatch(@PathVariable Long matchId) {
+        randomMatchService.deleteMatch(matchId);
+        return ResponseTemplate.EMPTY_RESPONSE;
     }
 
-    @GetMapping("/matches/{matchId}/quiz")
+    @PostMapping("/matches/{matchId}/start")
     @ResponseBody
-    public List<Quiz> startQuizForMatch(@PathVariable Long matchId) { //퀴즈 한번에 5개 가져옴(임시)
-        return matchService.startQuizForMatch(matchId);
+    public  ResponseTemplate<?> startMatch(@PathVariable Long matchId) {
+        matchService.startMatch(matchId);
+        return ResponseTemplate.EMPTY_RESPONSE;
     }
 
-    @GetMapping("/matches/{matchId}/quiz/{quizId}/answer")
+    @PostMapping("/matches/{matchId}/quiz/{quizId}/answer")
     @ResponseBody
-    public boolean checkQuizForMatch(@PathVariable Long quizId, String myAnswer) {
-        return matchService.checkQuizForMatch(quizId, myAnswer);
-    }
-
-    @PostMapping("/matches/{matchId}/quiz/{quizId}/result") //퀴즈 답 맞췄을때 처리. 틀렸을땐 프론트에서 3초 멈춤
-    @ResponseBody
-    public void rightQuizForMatch(@PathVariable Long matchId, Long userId) {
-        matchService.rightQuizForMatch(matchId, userId);
+    public ResponseTemplate<?> checkQuizForMatch(@PathVariable Long matchId, @PathVariable Long quizId, String userAnswer, @AuthenticationPrincipal AuthUser authUser) {
+        matchService.checkQuizForMatch(matchId, quizId, userAnswer, authUser.userId());
+        return ResponseTemplate.EMPTY_RESPONSE;
     }
 
     @GetMapping("/matches/{matchId}/result")
     @ResponseBody
-    public MatchResultResponse resultQuizForMatch(@PathVariable Long matchId, Long userId) {
-        return matchResultService.resultQuizForMatch(matchId, userId);
+    public ResponseTemplate<?> resultQuizForMatch(@PathVariable Long matchId, @AuthenticationPrincipal AuthUser authUser) {
+        MatchResultResponse matchResultResponse = matchResultService.resultQuizForMatch(matchId, authUser.userId());
+        return ResponseTemplate.from(matchResultResponse);
     }
-    */
+
+    @GetMapping("/matches/rank/all")
+    @ResponseBody
+    public ResponseTemplate<?> allRanking() {
+        List<UserResponse> allRanking = matchRankingService.allRanking();
+        return ResponseTemplate.from(RankingResponseList.from(allRanking));
+    }
+
+    @GetMapping("/matches/rank/friend")
+    @ResponseBody
+    public ResponseTemplate<?> friendRanking(@AuthenticationPrincipal AuthUser authUser) {
+        List<UserResponse> friendRanking = matchRankingService.friendRanking(authUser.userId());
+        return ResponseTemplate.from(RankingResponseList.from(friendRanking));
+    }
 }

@@ -2,7 +2,6 @@ package com.tripleS.server.match.repository;
 
 import com.tripleS.server.match.domain.Match;
 import com.tripleS.server.match.domain.type.MatchType;
-import com.tripleS.server.quiz.domain.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
