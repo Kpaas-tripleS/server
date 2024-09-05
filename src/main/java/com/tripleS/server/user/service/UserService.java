@@ -1,6 +1,7 @@
 package com.tripleS.server.user.service;
 
 import com.tripleS.server.user.domain.User;
+import com.tripleS.server.user.dto.request.LoginRequest;
 import com.tripleS.server.user.dto.request.SignUpRequest;
 import com.tripleS.server.user.dto.response.LoginResponse;
 import com.tripleS.server.user.dto.response.FindUserResponse;
@@ -38,13 +39,37 @@ public class UserService {
     }
 
     @Transactional
-    public LoginResponse login(String email, String password) {
-        User user = userRepository.findByEmail(email)
+    public LoginResponse login(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.email())
                 .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
+
+        String accessToken = jwtTokenProvider.createAccessToken(user);
+        String refreshToken = jwtTokenProvider.createRefreshToken(user);
+
+        return LoginResponse.of(accessToken, refreshToken);
+    }
+
+    @Transactional
+    public void socialSignUp(SignUpRequest signUpRequest) {
+
+        if (userRepository.existsByEmail(signUpRequest.email())) {
+            throw new EmailDuplicatedException(UserErrorCode.EMAIL_DUPLICATED);
+        }
+        if (userRepository.existsByNickname(signUpRequest.nickname())) {
+            throw new NicknameDuplicatedException(UserErrorCode.NICKNAME_DUPLICATED);
+        }
+
+        userRepository.save(signUpRequest.toEntity(passwordEncoder));
+    }
+
+    @Transactional
+    public LoginResponse socialLogin(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.email())
+                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
 
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);

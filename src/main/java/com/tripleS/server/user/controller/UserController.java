@@ -36,7 +36,21 @@ public class UserController {
     @PostMapping("/login")
     public ResponseTemplate<?> login(@RequestBody LoginRequest loginRequest) {
 
-        LoginResponse loginResponse = userService.login(loginRequest.email(), loginRequest.password());
+        LoginResponse loginResponse = userService.login(loginRequest);
+
+        return ResponseTemplate.from(loginResponse);
+    }
+
+    @PostMapping("/kakao-sign-up")
+    public ResponseTemplate<?> socialSignUp(@RequestBody SignUpRequest signUpRequest) {
+        userService.socialSignUp(signUpRequest);
+
+        return ResponseTemplate.EMPTY_RESPONSE;
+    }
+
+    @PostMapping("/kakao-login")
+    public ResponseTemplate<?> socialLogin(@RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.socialLogin(loginRequest);
 
         return ResponseTemplate.from(loginResponse);
     }
