@@ -9,9 +9,8 @@ public class ServerApplication {
 
 	public static void main(String[] args) {
 
-		System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "local");
+		//System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "local");
 
 		SpringApplication.run(ServerApplication.class, args);
 	}
 }
-

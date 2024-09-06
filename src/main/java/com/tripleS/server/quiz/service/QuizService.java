@@ -34,7 +34,13 @@ public class QuizService {
                 .collect(Collectors.toList());
     }
 
-    public QuizDto getQuiz(Long quizId) {
+    public List<QuizDto> getRandomQuizzesForMatch(int count) {
+        return quizRepository.findRandomQuizzes(count).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+ 
+  public QuizDto getQuiz(Long quizId) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with id: " + quizId));
         return convertToDTO(quiz);
