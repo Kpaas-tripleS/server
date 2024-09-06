@@ -1,5 +1,6 @@
 package com.tripleS.server.user.domain;
 
+import com.tripleS.server.friend.domain.BeFriend;
 import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
@@ -13,6 +14,16 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "user",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"email"}),
+                @UniqueConstraint(columnNames = {"nickname"})
+        },
+        indexes = {
+                @Index(columnList = "email"),
+                @Index(columnList = "nickname")
+        }
+)
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,16 +64,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name ="profile_image")
-    @Enumerated(EnumType.STRING)
-    private String profile_image;
+    @Column(name = "profile_image")
+    private String profileImage;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BeFriend> beFriendList = new ArrayList<>();
 
     @Builder
     public User(String name, String phone, String nickname, Grade grade, Long win_count,
-                LoginType loginType, String email, String password, Role role, String profile_image) {
+                LoginType loginType, String email, String password, Role role, String profile_image, String refreshToken) {
         this.name = name;
         this.phone = phone;
         this.nickname = nickname;
@@ -72,6 +88,11 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.profile_image = profile_image;
+        this.profileImage = profile_image;
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

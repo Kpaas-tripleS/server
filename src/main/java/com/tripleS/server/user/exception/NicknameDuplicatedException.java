@@ -10,3 +10,4 @@ public class NicknameDuplicatedException extends RuntimeException {
 
     private final ErrorCode errorCode;
 }
+
