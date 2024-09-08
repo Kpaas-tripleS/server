@@ -4,11 +4,13 @@ import com.tripleS.server.global.dto.AuthUser;
 import com.tripleS.server.global.dto.ResponseTemplate;
 import com.tripleS.server.user.dto.request.LoginRequest;
 import com.tripleS.server.user.dto.request.SignUpRequest;
+import com.tripleS.server.user.dto.response.FindUserResponse;
 import com.tripleS.server.user.dto.response.GetUserInfoResponse;
 import com.tripleS.server.user.dto.response.LoginResponse;
-import com.tripleS.server.user.dto.response.FindUserResponse;
+import com.tripleS.server.user.dto.response.SocialLoginResponse;
 import com.tripleS.server.user.repository.UserRepository;
 import com.tripleS.server.user.service.JwtTokenProvider;
+import com.tripleS.server.user.service.SocialLoginService;
 import com.tripleS.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final SocialLoginService socialLoginService;
 
     @PostMapping("/sign-up")
     public ResponseTemplate<?> signUp(@RequestBody SignUpRequest signUpRequest) {
@@ -41,19 +44,20 @@ public class UserController {
         return ResponseTemplate.from(loginResponse);
     }
 
-    @PostMapping("/kakao-sign-up")
-    public ResponseTemplate<?> socialSignUp(@RequestBody SignUpRequest signUpRequest) {
-        userService.socialSignUp(signUpRequest);
-
-        return ResponseTemplate.EMPTY_RESPONSE;
-    }
-
     @PostMapping("/kakao-login")
-    public ResponseTemplate<?> socialLogin(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = userService.socialLogin(loginRequest);
+    public ResponseTemplate<?> socialLogin(@RequestParam("code") String code) {
+        // 1. 코드로 액세스 토큰 가져오기
+        String accessToken = socialLoginService.getAccessToken(code);
+
+        // 2. 액세스 토큰으로 사용자 정보 가져오기
+        SocialLoginResponse userInfo = socialLoginService.getSocialUserInfo(accessToken);
+
+        // 3. 사용자 정보로 로그인 처리 (DB 저장 또는 업데이트)
+        LoginResponse loginResponse = userService.socialLogin(userInfo);
 
         return ResponseTemplate.from(loginResponse);
     }
+
 
     @GetMapping("/test-token/{userId}")
     public String getTestToken(@PathVariable Long userId) {

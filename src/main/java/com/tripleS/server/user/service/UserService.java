@@ -1,11 +1,14 @@
 package com.tripleS.server.user.service;
 
 import com.tripleS.server.user.domain.User;
+import com.tripleS.server.user.domain.type.LoginType;
+import com.tripleS.server.user.domain.type.Role;
 import com.tripleS.server.user.dto.request.LoginRequest;
 import com.tripleS.server.user.dto.request.SignUpRequest;
 import com.tripleS.server.user.dto.response.LoginResponse;
 import com.tripleS.server.user.dto.response.FindUserResponse;
 import com.tripleS.server.user.dto.response.GetUserInfoResponse;
+import com.tripleS.server.user.dto.response.SocialLoginResponse;
 import com.tripleS.server.user.exception.EmailDuplicatedException;
 import com.tripleS.server.user.exception.NicknameDuplicatedException;
 import com.tripleS.server.user.exception.UserNotFoundException;
@@ -54,22 +57,21 @@ public class UserService {
     }
 
     @Transactional
-    public void socialSignUp(SignUpRequest signUpRequest) {
+    public LoginResponse socialLogin(SocialLoginResponse socialUserInfo) {
 
-        if (userRepository.existsByEmail(signUpRequest.email())) {
-            throw new EmailDuplicatedException(UserErrorCode.EMAIL_DUPLICATED);
-        }
-        if (userRepository.existsByNickname(signUpRequest.nickname())) {
-            throw new NicknameDuplicatedException(UserErrorCode.NICKNAME_DUPLICATED);
-        }
-
-        userRepository.save(signUpRequest.toEntity(passwordEncoder));
-    }
-
-    @Transactional
-    public LoginResponse socialLogin(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.email())
-                .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByEmail(socialUserInfo.email())
+                .orElseGet(() -> {
+                    // 새로운 사용자 생성
+                    User newUser = User.builder()
+                            .nickname(socialUserInfo.nickname())
+                            .email(socialUserInfo.email())
+                            .profile_image(socialUserInfo.profileImageUrl())
+                            .phone(socialUserInfo.phoneNumber())  // 필요한 경우 전화번호도 추가
+                            .loginType(LoginType.KAKAO)  // 로그인 타입을 설정
+                            .role(Role.USER)  // 기본 역할 설정
+                            .build();
+                    return userRepository.save(newUser);  // 새로운 사용자 저장
+                });
 
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);
