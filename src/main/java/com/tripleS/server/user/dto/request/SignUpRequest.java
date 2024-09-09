@@ -8,19 +8,14 @@ import com.tripleS.server.user.domain.type.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record SignUpRequest(
-        @JsonProperty("profile_name")
         String name,
 
-        @JsonProperty("profile_email")
         String email,
 
-        @JsonProperty("profile_password")
         String password,
 
-        @JsonProperty("profile_nickname")
         String nickname,
 
-        @JsonProperty("profile_phone")
         String phone
 ) {
     public User toEntity(PasswordEncoder passwordEncoder) {

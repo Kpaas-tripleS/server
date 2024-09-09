@@ -61,16 +61,15 @@ public class UserService {
 
         User user = userRepository.findByEmail(socialUserInfo.email())
                 .orElseGet(() -> {
-                    // 새로운 사용자 생성
                     User newUser = User.builder()
                             .nickname(socialUserInfo.nickname())
                             .email(socialUserInfo.email())
                             .profile_image(socialUserInfo.profileImageUrl())
-                            .phone(socialUserInfo.phoneNumber())  // 필요한 경우 전화번호도 추가
-                            .loginType(LoginType.KAKAO)  // 로그인 타입을 설정
-                            .role(Role.USER)  // 기본 역할 설정
+                            .phone(socialUserInfo.phoneNumber())
+                            .loginType(LoginType.KAKAO)
+                            .role(Role.USER)
                             .build();
-                    return userRepository.save(newUser);  // 새로운 사용자 저장
+                    return userRepository.save(newUser);
                 });
 
         String accessToken = jwtTokenProvider.createAccessToken(user);

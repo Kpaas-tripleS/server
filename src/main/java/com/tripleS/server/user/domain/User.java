@@ -34,33 +34,33 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length = 20, nullable = false)
+    @Column(name = "name", length = 20)
     private String name;
 
-    @Column(name = "phone", length = 20, nullable = false)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "nickname", length = 20, nullable = false)
+    @Column(name = "nickname", length = 20)
     private String nickname;
 
-    @Column(name = "grade", nullable = false)
+    @Column(name = "grade")
     @Enumerated(EnumType.STRING)
     private Grade grade;
 
-    @Column(name = "win_count", nullable = false)
+    @Column(name = "win_count")
     private Long win_count;
 
-    @Column(name = "login_type", nullable = false)
+    @Column(name = "login_type")
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "local_pw")
     private String password;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 
