@@ -1,6 +1,5 @@
 package com.tripleS.server.user.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
