@@ -7,6 +7,7 @@ import com.tripleS.server.friend.service.BeFriendService;
 import com.tripleS.server.global.dto.AuthUser;
 import com.tripleS.server.global.dto.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,9 +34,10 @@ public class BeFriendController {
     }
 
     @GetMapping
-    public ResponseTemplate<?> getFriendRequestList(@AuthenticationPrincipal AuthUser authUser) {
+    public ResponseTemplate<?> getFriendRequestList(@AuthenticationPrincipal AuthUser authUser,
+                                                    @RequestParam String sort) {
 
-        List<BeFriendResponse> friendRequestList = beFriendService.getFriendRequestList(authUser.userId());
+        List<BeFriendResponse> friendRequestList = beFriendService.getFriendRequestList(authUser.userId(), sort);
 
         return ResponseTemplate.from(BeFriendResponseList.from(friendRequestList));
     }
