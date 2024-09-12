@@ -8,7 +8,7 @@ import com.tripleS.server.match.exception.errorcode.MatchErrorCode;
 import com.tripleS.server.match.repository.MatchRepository;
 import com.tripleS.server.match.repository.MatchResultRepository;
 import com.tripleS.server.quiz.domain.Quiz;
-import com.tripleS.server.quiz.dto.quizDto;
+import com.tripleS.server.quiz.dto.QuizDto;
 import com.tripleS.server.quiz.repository.QuizRepository;
 import com.tripleS.server.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class MatchService {
                     .build();
             matchResultRepository.save(matchResult);
         }
-        List<quizDto> quizzes = quizService.getRandomQuizzesForMatch(5);
+        List<QuizDto> quizzes = quizService.getRandomQuizzesForMatch(5);
         String destination = "/topic/matches/" + matchId;
         messagingTemplate.convertAndSend(destination, MatchStartResponse.from(match, quizzes));
     }

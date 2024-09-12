@@ -23,8 +23,12 @@ public class MatchRankingService {
     }
 
     public List<UserResponse> friendRanking(Long userId) {
-        User user = userRepository.findByIdFetchFriend(userId)
+//        User user = userRepository.findByIdFetchFriend(userId)
+//                .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
+
         return userRepository.findFriendsByWinCountDesc(userId).stream()
                 .map(UserResponse::from)
                 .toList();

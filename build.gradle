@@ -51,16 +51,18 @@ dependencies {
 
 	// OpenFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	//	//jsoup
+	implementation 'org.jsoup:jsoup:1.16.1'
 }
 
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3" // Spring Boot 3.x에 맞는 버전
 	}
-	implementation 'com.auth0:java-jwt:4.2.1'
+//	implementation 'com.auth0:java-jwt:4.2.1'
+//
 
-	//jsoup
-	implementation 'org.jsoup:jsoup:1.16.1'
 }
 
 tasks.named('test') {
