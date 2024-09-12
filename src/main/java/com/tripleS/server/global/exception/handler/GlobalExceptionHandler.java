@@ -4,6 +4,8 @@ import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.global.exception.errorcode.ErrorCode;
 import com.tripleS.server.global.exception.errorcode.GlobalErrorCode;
 import com.tripleS.server.global.exception.response.ErrorResponse;
+import com.tripleS.server.match.exception.MatchNotFoundException;
+import com.tripleS.server.match.exception.UserNotExistException;
 import com.tripleS.server.user.exception.EmailDuplicatedException;
 import com.tripleS.server.user.exception.NicknameDuplicatedException;
 import com.tripleS.server.user.exception.UserNotFoundException;
@@ -48,6 +50,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleIllegalArgument(final IllegalArgumentException e) {
         log.warn("handleIllegalArgument", e);
         return handleExceptionInternal(GlobalErrorCode.INVALID_PARAMETER, e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotExistException.class)
+    public ResponseEntity<Object> handleUserNotExist(final UserNotExistException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(MatchNotFoundException.class)
+    public ResponseEntity<Object> handleMatchNotFound(final MatchNotFoundException e) {
+        return handleExceptionInternal(e.getErrorCode());
     }
 
     /**

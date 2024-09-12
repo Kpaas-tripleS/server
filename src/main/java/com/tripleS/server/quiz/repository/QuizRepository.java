@@ -14,4 +14,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     List<Quiz> findRandomUnsolvedQuizzes(int count);
 
 
+    @Query(value = "SELECT * FROM quiz ORDER BY RAND() LIMIT 5", nativeQuery = true )
+    List<Quiz> findRandomQuizzes(int count);
+
 }
