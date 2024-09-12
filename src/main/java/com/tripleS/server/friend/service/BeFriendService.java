@@ -11,7 +11,6 @@ import com.tripleS.server.user.exception.UserNotFoundException;
 import com.tripleS.server.user.exception.errorcode.UserErrorCode;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,14 +35,10 @@ public class BeFriendService {
         friendRepository.save(beFriendRequest.toEntity(requester, receiver, false));
     }
 
-    public List<BeFriendResponse> getFriendRequestList(Long userId, String sort) {
+    public List<BeFriendResponse> getFriendRequestList(Long userId) {
 
-        Sort sortType = Sort.by(Sort.Direction.ASC, "name");
-        if ("date".equalsIgnoreCase(sort)) {
-            sortType = Sort.by(Sort.Direction.DESC, "create_date");
-        }
 
-        List<Friend> friendsList = friendRepository.findByUserIdAndIsAcceptedFalse(userId, sortType);
+        List<Friend> friendsList = friendRepository.findByUserIdAndIsAcceptedFalse(userId);
 
         return friendsList.stream()
                 .map(BeFriendResponse::from)

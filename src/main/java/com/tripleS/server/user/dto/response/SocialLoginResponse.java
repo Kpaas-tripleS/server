@@ -1,18 +1,46 @@
 package com.tripleS.server.user.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record SocialLoginResponse(
-        @JsonProperty("profile_name")
-        String nickname,
+        KakaoAccount kakaoAccount,
+        Properties properties
+) {
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public record Properties(
+            String nickname,
+            String profileImage
+    ) {
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public record Profile(
+                String profileImage_Url
+        ) {
 
-        @JsonProperty("profile_email")
-        String email,
+        }
+    }
 
-        @JsonProperty("profile_image")
-        String profileImageUrl,
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public record KakaoAccount(
+            String email,
+            String phoneNumber
+    ) {
+    }
 
-        @JsonProperty("profile_phone")
-        String phoneNumber
-){
+    public String nickname() {
+        return properties.nickname();
+    }
+
+    public String email() {
+        return kakaoAccount.email();
+    }
+
+    public String profileImageUrl() {
+        return properties.profileImage();
+    }
+
+    public String phoneNumber() {
+        return kakaoAccount.phoneNumber();
+    }
 }

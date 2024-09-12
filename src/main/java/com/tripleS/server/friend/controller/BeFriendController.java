@@ -34,10 +34,9 @@ public class BeFriendController {
     }
 
     @GetMapping
-    public ResponseTemplate<?> getFriendRequestList(@AuthenticationPrincipal AuthUser authUser,
-                                                    @RequestParam String sort) {
+    public ResponseTemplate<?> getFriendRequestList(@AuthenticationPrincipal AuthUser authUser) {
 
-        List<BeFriendResponse> friendRequestList = beFriendService.getFriendRequestList(authUser.userId(), sort);
+        List<BeFriendResponse> friendRequestList = beFriendService.getFriendRequestList(authUser.userId());
 
         return ResponseTemplate.from(BeFriendResponseList.from(friendRequestList));
     }

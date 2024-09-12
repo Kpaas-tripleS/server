@@ -28,6 +28,6 @@ public class SocialLoginService {
     }
 
     public SocialLoginResponse getSocialUserInfo(String accessToken) {
-        return kakaoGetClient.getUserInfo(accessToken);
+        return kakaoGetClient.getUserInfo("Bearer " + accessToken);
     }
 }
