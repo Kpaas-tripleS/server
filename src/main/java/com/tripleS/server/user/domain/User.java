@@ -1,10 +1,10 @@
 package com.tripleS.server.user.domain;
 
-import com.tripleS.server.friend.domain.BeFriend;
 import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
 import com.tripleS.server.user.domain.type.Role;
+import com.tripleS.server.user.dto.response.GetUserInfoResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,47 +34,41 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length = 20, nullable = false)
+    @Column(name = "name", length = 20)
     private String name;
 
-    @Column(name = "phone", length = 20, nullable = false)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "nickname", length = 20, nullable = false)
+    @Column(name = "nickname", length = 20)
     private String nickname;
 
-    @Column(name = "grade", nullable = false)
+    @Column(name = "grade")
     @Enumerated(EnumType.STRING)
     private Grade grade;
 
-    @Column(name = "win_count", nullable = false)
+    @Column(name = "win_count")
     private Long win_count;
 
-    @Column(name = "login_type", nullable = false)
+    @Column(name = "login_type")
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "local_pw")
     private String password;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BeFriend> beFriendList = new ArrayList<>();
 
     @Builder
     public User(String name, String phone, String nickname, Grade grade, Long win_count,
@@ -89,10 +83,12 @@ public class User {
         this.password = password;
         this.role = role;
         this.profileImage = profile_image;
-        this.refreshToken = refreshToken;
     }
 
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void updateUserInfo(GetUserInfoResponse getUserInfoResponse) {
+        this.nickname = getUserInfoResponse.nickname();
+        this.password = getUserInfoResponse.password();
+        this.profileImage = getUserInfoResponse.profileImage();
+        this.phone = getUserInfoResponse.phoneNumber();
     }
 }

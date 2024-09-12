@@ -1,5 +1,6 @@
 package com.tripleS.server.friend.service;
 
+import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.friend.dto.response.FriendResponse;
 import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.friend.exception.errorcode.FriendErrorCode;
@@ -24,10 +25,8 @@ public class FriendService {
 
     public List<FriendResponse> getFriendList(Long userId) {
 
-        User user = userRepository.findByIdFetchFriend(userId)
+        User user = userRepository.findByIdWithFriends(userId)
                 .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
-
-        user.getFriendList().forEach(friend -> log.info("friend: {}", friend.getFriend().getNickname()));
 
         return user.getFriendList().stream()
                 .map(FriendResponse::from)
@@ -45,4 +44,3 @@ public class FriendService {
                         });
     }
 }
-

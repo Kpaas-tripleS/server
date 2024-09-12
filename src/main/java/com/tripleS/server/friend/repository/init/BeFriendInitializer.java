@@ -1,7 +1,7 @@
 package com.tripleS.server.friend.repository.init;
 
-import com.tripleS.server.friend.domain.BeFriend;
-import com.tripleS.server.friend.repository.BeFriendRepository;
+import com.tripleS.server.friend.domain.Friend;
+import com.tripleS.server.friend.repository.FriendRepository;
 import com.tripleS.server.global.util.DummyDataInit;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.repository.UserRepository;
@@ -21,11 +21,11 @@ import java.util.List;
 public class BeFriendInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
-    private final BeFriendRepository beFriendRepository;
+    private final FriendRepository friendRepository;
 
     @Override
     public void run(ApplicationArguments args) {
-        if (beFriendRepository.count() != 0) {
+        if (friendRepository.count() != 0) {
             log.info("BeFriend data already exists.");
         } else {
             User USER1 = userRepository.findById(1L).orElseThrow();
@@ -35,31 +35,33 @@ public class BeFriendInitializer implements ApplicationRunner {
             User USER5 = userRepository.findById(5L).orElseThrow();
             User USER6 = userRepository.findById(6L).orElseThrow();
 
-            List<BeFriend> friendList = new ArrayList<>();
+            List<Friend> friendList = new ArrayList<>();
 
-            BeFriend beFriend1 = BeFriend.builder()
-                    .requester(USER2)
-                    .receiver(USER1)
+            Friend beFriend1 = Friend.builder()
+                    .user(USER1)
+                    .friend(USER2)
+                    .isAccepted(true)
+                    .build();
+            Friend beFriend2 = Friend.builder()
+                    .user(USER1)
+                    .friend(USER3)
+                    .isAccepted(true)
                     .build();
 
-            BeFriend beFriend2 = BeFriend.builder()
-                    .requester(USER3)
-                    .receiver(USER1)
+            Friend beFriend3 = Friend.builder()
+                    .user(USER1)
+                    .friend(USER4)
+                    .isAccepted(false)
                     .build();
-
-            BeFriend beFriend3 = BeFriend.builder()
-                    .requester(USER4)
-                    .receiver(USER1)
+            Friend beFriend4 = Friend.builder()
+                    .user(USER1)
+                    .friend(USER5)
+                    .isAccepted(false)
                     .build();
-
-            BeFriend beFriend4 = BeFriend.builder()
-                    .requester(USER5)
-                    .receiver(USER1)
-                    .build();
-
-            BeFriend beFriend5 = BeFriend.builder()
-                    .requester(USER6)
-                    .receiver(USER1)
+            Friend beFriend5 = Friend.builder()
+                    .user(USER1)
+                    .friend(USER6)
+                    .isAccepted(false)
                     .build();
 
             friendList.add(beFriend1);
@@ -68,7 +70,7 @@ public class BeFriendInitializer implements ApplicationRunner {
             friendList.add(beFriend4);
             friendList.add(beFriend5);
 
-            beFriendRepository.saveAll(friendList);
+            friendRepository.saveAll(friendList);
         }
     }
 }

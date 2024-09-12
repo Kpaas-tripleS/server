@@ -8,9 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record SignUpRequest(
         String name,
+
         String email,
+
         String password,
+
         String nickname,
+
         String phone
 ) {
     public User toEntity(PasswordEncoder passwordEncoder) {
