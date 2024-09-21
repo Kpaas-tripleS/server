@@ -15,7 +15,7 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
     @Query("SELECT m FROM Match m WHERE m.isMatch = false AND m.matchType = :matchType")
     List<Match> findByIsMatchFalseAndMatchTypeRandom(@Param("matchType") MatchType matchType);
 
-    @Query("SELECT m FROM Match m WHERE m.matchType = :matchType AND m.follower.id = :userId")
+    @Query("SELECT m FROM Match m WHERE m.matchType = :matchType AND m.follower.id = :userId AND m.isMatch = false")
     List<Match> findFriendMatch(@Param("matchType") MatchType matchType, @Param("userId") Long userId);
 
 }

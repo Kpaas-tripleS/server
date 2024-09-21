@@ -11,7 +11,6 @@ import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,8 +23,7 @@ public class FriendMatchService {
 
     private final MatchRepository matchRepository;
     private final UserRepository userRepository;
-    private final RandomMatchService randomMatchService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final MatchService matchService;
 
     public Long friendMatch(Long friendId, Long userId, LocalDateTime creatTime) {
         User user = userRepository.findById(userId)
@@ -40,6 +38,7 @@ public class FriendMatchService {
                 .matchType(MatchType.FRIEND)
                 .build();
         matchRepository.save(match);
+        matchService.matchStatus(userId, match.getId());
         return match.getId();
     }
 
@@ -57,9 +56,7 @@ public class FriendMatchService {
     }
 
     public void rejectMatch(Long matchId) {
-        String destination = "/topic/matches/" + matchId + "/status";
-        messagingTemplate.convertAndSend(destination, "MATCH_REJECT");
-        randomMatchService.deleteMatch(matchId);
+        matchService.deleteMatch(matchId);
     }
 
 }
