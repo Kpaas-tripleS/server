@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,20 +29,15 @@ public class MatchController {
     @PostMapping("/matches")
     @ResponseBody
     public Long findMatch(@AuthenticationPrincipal AuthUser authUser, @RequestBody MatchRequest matchRequest) {
-        return randomMatchService.findMatch(authUser.userId(), matchRequest.creatTime());
-    }
-
-    @GetMapping("/matches/{matchId}/status")
-    @ResponseBody
-    public ResponseTemplate<?> matchStatus(@PathVariable Long matchId) {
-        randomMatchService.matchStatus(matchId);
-        return ResponseTemplate.EMPTY_RESPONSE;
+        LocalDateTime creatTime = LocalDateTime.parse(matchRequest.creatTime());
+        return randomMatchService.findMatch(authUser.userId(), creatTime);
     }
 
     @PostMapping("/matches/{friendId}")
     @ResponseBody
     public Long friendMatch(@PathVariable Long friendId, @AuthenticationPrincipal AuthUser authUser, @RequestBody MatchRequest matchRequest) {
-        return friendMatchService.friendMatch(friendId, authUser.userId(), matchRequest.creatTime());
+        LocalDateTime creatTime = LocalDateTime.parse(matchRequest.creatTime());
+        return friendMatchService.friendMatch(friendId, authUser.userId(), creatTime);
     }
 
     @GetMapping("/matches/friend")
@@ -68,20 +64,13 @@ public class MatchController {
     @DeleteMapping("/matches/{matchId}")
     @ResponseBody
     public ResponseTemplate<?> deleteMatch(@PathVariable Long matchId) {
-        randomMatchService.deleteMatch(matchId);
-        return ResponseTemplate.EMPTY_RESPONSE;
-    }
-
-    @PostMapping("/matches/{matchId}/start")
-    @ResponseBody
-    public  ResponseTemplate<?> startMatch(@PathVariable Long matchId) {
-        matchService.startMatch(matchId);
+        matchService.deleteMatch(matchId);
         return ResponseTemplate.EMPTY_RESPONSE;
     }
 
     @PostMapping("/matches/{matchId}/quiz/{quizId}/answer")
     @ResponseBody
-    public ResponseTemplate<?> checkQuizForMatch(@PathVariable Long matchId, @PathVariable Long quizId, String userAnswer, @AuthenticationPrincipal AuthUser authUser) {
+    public ResponseTemplate<?> checkQuizForMatch(@PathVariable Long matchId, @PathVariable Long quizId, @RequestBody String userAnswer, @AuthenticationPrincipal AuthUser authUser) {
         matchService.checkQuizForMatch(matchId, quizId, userAnswer, authUser.userId());
         return ResponseTemplate.EMPTY_RESPONSE;
     }

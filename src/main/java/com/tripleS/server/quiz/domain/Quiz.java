@@ -37,13 +37,13 @@ public class Quiz {
     private Boolean isSolved = false;  // 기본값을 여기서만 설정
 
     @Builder
-    public Quiz(String question, String choiceOne, String choiceTwo, String choiceThree, String choiceFour) {
+    public Quiz(String question, String choiceOne, String choiceTwo, String choiceThree, String choiceFour, String answer) {
         this.question = question;
         this.choiceOne = choiceOne;
         this.choiceTwo = choiceTwo;
         this.choiceThree = choiceThree;
         this.choiceFour = choiceFour;
         this.answer = answer;
-       ;// isSolved는 기본값인 false를 사용하므로 여기서 설정하지 않음
+       // isSolved는 기본값인 false를 사용하므로 여기서 설정하지 않음
     }
 }
