@@ -45,12 +45,9 @@ public class UserController {
     }
 
     @PostMapping("/kakao-login")
-    public ResponseTemplate<?> socialLogin(@RequestParam("code") String code) {
-        // 1. 코드로 액세스 토큰 가져오기
-        String accessToken = socialLoginService.getAccessToken(code);
-
+    public ResponseTemplate<?> socialLogin(@RequestParam("token") String token) {
         // 2. 액세스 토큰으로 사용자 정보 가져오기
-        SocialLoginResponse userInfo = socialLoginService.getSocialUserInfo(accessToken);
+        SocialLoginResponse userInfo = socialLoginService.getSocialUserInfo(token);
 
         // 3. 사용자 정보로 로그인 처리 (DB 저장 또는 업데이트)
         LoginResponse loginResponse = userService.socialLogin(userInfo);

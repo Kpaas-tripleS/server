@@ -4,6 +4,7 @@ import com.tripleS.server.user.controller.client.KakaoClient;
 import com.tripleS.server.user.controller.client.KakaoGetClient;
 import com.tripleS.server.user.dto.JwtTokenDto;
 import com.tripleS.server.user.dto.response.SocialLoginResponse;
+import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,6 @@ public class SocialLoginService {
 
     private final KakaoClient kakaoClient;
     private final KakaoGetClient kakaoGetClient;
-
-    public String getAccessToken(String code) {
-
-        JwtTokenDto accessToken = kakaoClient.getAccessToken("authorization_code", clientId, redirectUri, code);
-        return accessToken.accessToken();
-    }
 
     public SocialLoginResponse getSocialUserInfo(String accessToken) {
         return kakaoGetClient.getUserInfo("Bearer " + accessToken);

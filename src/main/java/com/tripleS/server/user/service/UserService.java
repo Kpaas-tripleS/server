@@ -60,17 +60,15 @@ public class UserService {
     public LoginResponse socialLogin(SocialLoginResponse socialUserInfo) {
 
         User user = userRepository.findByEmail(socialUserInfo.email())
-                .orElseGet(() -> {
-                    User newUser = User.builder()
-                            .nickname(socialUserInfo.nickname())
-                            .email(socialUserInfo.email())
-                            .profile_image(socialUserInfo.profileImageUrl())
-                            .phone(socialUserInfo.phoneNumber())
-                            .loginType(LoginType.KAKAO)
-                            .role(Role.USER)
-                            .build();
-                    return userRepository.save(newUser);
-                });
+                .orElseGet(() ->
+                        userRepository.save(User.builder()
+                                .nickname(socialUserInfo.nickname())
+                                .email(socialUserInfo.email())
+                                .profile_image(socialUserInfo.thumbnailImageUrl())
+                                .phone(socialUserInfo.phoneNumber())
+                                .loginType(LoginType.KAKAO)
+                                .role(Role.USER)
+                                .build()));
 
         String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = jwtTokenProvider.createRefreshToken(user);

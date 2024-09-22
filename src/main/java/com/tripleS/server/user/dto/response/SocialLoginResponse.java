@@ -1,26 +1,31 @@
 package com.tripleS.server.user.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record SocialLoginResponse(
+        String id,
         KakaoAccount kakaoAccount,
         Properties properties
 ) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Properties(
             String nickname,
-            String profileImage
+            String thumbnailImage
     ) {
+        @JsonIgnoreProperties(ignoreUnknown = true)
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public record Profile(
-                String profileImage_Url
+                String thumbnailImageUrl
         ) {
-
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record KakaoAccount(
             String email,
@@ -36,8 +41,8 @@ public record SocialLoginResponse(
         return kakaoAccount.email();
     }
 
-    public String profileImageUrl() {
-        return properties.profileImage();
+    public String thumbnailImageUrl() {
+        return properties.thumbnailImage();
     }
 
     public String phoneNumber() {

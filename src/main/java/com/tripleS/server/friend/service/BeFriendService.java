@@ -2,6 +2,7 @@ package com.tripleS.server.friend.service;
 
 import com.tripleS.server.friend.domain.Friend;
 import com.tripleS.server.friend.dto.request.BeFriendRequest;
+import com.tripleS.server.friend.dto.request.FriendRequestHandleRequest;
 import com.tripleS.server.friend.dto.response.BeFriendResponse;
 import com.tripleS.server.friend.exception.FriendNotFoundException;
 import com.tripleS.server.friend.exception.errorcode.FriendErrorCode;
@@ -32,7 +33,7 @@ public class BeFriendService {
         User receiver = userRepository.findById(beFriendRequest.receiverId())
                 .orElseThrow(() -> new FriendNotFoundException(FriendErrorCode.FRIEND_NOT_FOUND));
 
-        friendRepository.save(beFriendRequest.toEntity(requester, receiver, false));
+        friendRepository.save(beFriendRequest.toEntity(requester, receiver));
     }
 
     public List<BeFriendResponse> getFriendRequestList(Long userId) {
@@ -45,13 +46,14 @@ public class BeFriendService {
                 .toList();
     }
 
+    // 친구 신청 수락과 친구 신청 거절 기능
     @Transactional
-    public void handleFriendRequest(BeFriendRequest beFriendRequest) {
+    public void handleFriendRequest(Long userId, FriendRequestHandleRequest friendRequestHandleRequest) {
 
-        friendRepository.findByUserIdAndFriendId(beFriendRequest.receiverId(), beFriendRequest.requesterId())
+        friendRepository.findByUserIdAndFriendId(userId, friendRequestHandleRequest.requesterId())
                 .ifPresentOrElse(
                         friend -> {
-                            if (beFriendRequest.isAccepted()) {
+                            if (friendRequestHandleRequest.isAccepted()) {
                                 friend.accept();
                             } else {
                                 friendRepository.delete(friend);

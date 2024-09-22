@@ -1,6 +1,7 @@
 package com.tripleS.server.friend.controller;
 
 import com.tripleS.server.friend.dto.request.BeFriendRequest;
+import com.tripleS.server.friend.dto.request.FriendRequestHandleRequest;
 import com.tripleS.server.friend.dto.response.BeFriendResponse;
 import com.tripleS.server.friend.dto.response.BeFriendResponseList;
 import com.tripleS.server.friend.service.BeFriendService;
@@ -24,8 +25,10 @@ public class BeFriendController {
     private final BeFriendService beFriendService;
 
     @PostMapping("/request")
-    public ResponseEntity<ResponseTemplate<?>> sendFriendRequest(@AuthenticationPrincipal AuthUser authUser,
-                                                                @RequestBody BeFriendRequest beFriendRequest) {
+    public ResponseEntity<ResponseTemplate<?>> sendFriendRequest(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestBody BeFriendRequest beFriendRequest
+    ) {
 
         beFriendService.sendFriendRequest(authUser.userId(), beFriendRequest);
 
@@ -42,9 +45,12 @@ public class BeFriendController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseTemplate<?>> handleFriendRequest(@RequestBody BeFriendRequest beFriendRequest) {
+    public ResponseEntity<ResponseTemplate<?>> handleFriendRequest(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestBody FriendRequestHandleRequest friendRequestHandleRequest
+    ) {
 
-        beFriendService.handleFriendRequest(beFriendRequest);
+        beFriendService.handleFriendRequest(authUser.userId(), friendRequestHandleRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseTemplate.EMPTY_RESPONSE);
