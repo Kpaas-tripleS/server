@@ -11,6 +11,7 @@ import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class FriendMatchService {
     private final MatchRepository matchRepository;
     private final UserRepository userRepository;
     private final MatchService matchService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public Long friendMatch(Long friendId, Long userId, LocalDateTime creatTime) {
         User user = userRepository.findById(userId)
@@ -49,14 +51,28 @@ public class FriendMatchService {
     }
 
     public void acceptMatch(Long matchId) {
-        Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new MatchNotFoundException(MatchErrorCode.MATCH_NOT_FOUND));
-        match.setIsMatch(true);
-        matchRepository.save(match);
+        try {
+            Match match = matchRepository.findById(matchId)
+                    .orElseThrow(() -> new MatchNotFoundException(MatchErrorCode.MATCH_NOT_FOUND));
+            match.setIsMatch(true);
+            matchRepository.save(match);
+        }
+        catch (MatchNotFoundException e) {
+            String destination = "/topic/matches/" + matchId;
+            messagingTemplate.convertAndSend(destination, "MATCH_DELETE");
+        }
     }
 
     public void rejectMatch(Long matchId) {
-        matchService.deleteMatch(matchId);
+        try {
+            Match match = matchRepository.findById(matchId)
+                    .orElseThrow(() -> new MatchNotFoundException(MatchErrorCode.MATCH_NOT_FOUND));
+            matchService.deleteMatch(matchId);
+        }
+        catch (MatchNotFoundException e) {
+            String destination = "/topic/matches/" + matchId;
+            messagingTemplate.convertAndSend(destination, "MATCH_DELETE");
+        }
     }
 
 }
