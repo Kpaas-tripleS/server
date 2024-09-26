@@ -9,38 +9,51 @@ import com.tripleS.server.quiz.repository.QuizRepository;
 import com.tripleS.server.quiz.repository.QuizResultRepository;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+
 @Service
+@RequiredArgsConstructor
 public class QuizService {
+
     private final QuizRepository quizRepository;
     private final QuizResultRepository quizResultRepository;
     private final UserRepository userRepository;
-
-    public QuizService(QuizRepository quizRepository, QuizResultRepository quizResultRepository, UserRepository userRepository) {
-        this.quizRepository = quizRepository;
-        this.quizResultRepository = quizResultRepository;
-        this.userRepository = userRepository;
-    }
+    private final Random random = new Random();
 
     public List<QuizDto> getRandomQuizzes(int count) {
-        return quizRepository.findRandomUnsolvedQuizzes(count).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        long totalQuizzes = quizRepository.countAllQuizzes();
+        return getRandomQuizzesWithOffset(count, totalQuizzes);
     }
 
     public List<QuizDto> getRandomQuizzesForMatch(int count) {
-        return quizRepository.findRandomQuizzes(count).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        long totalQuizzes = quizRepository.countAllQuizzes();
+        return getRandomQuizzesWithOffset(count, totalQuizzes);
     }
- 
-  public QuizDto getQuiz(Long quizId) {
+
+    private List<QuizDto> getRandomQuizzesWithOffset(int count, long totalQuizzes) {
+        if (totalQuizzes <= count) {
+            return quizRepository.findQuizzesWithOffset(count, 0).stream()
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        }
+
+        long randomOffset = random.nextLong(totalQuizzes - count + 1);
+        List<Quiz> quizzes = quizRepository.findQuizzesWithOffset(count, randomOffset);
+        Collections.shuffle(quizzes);
+        return quizzes.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public QuizDto getQuiz(Long quizId) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with id: " + quizId));
         return convertToDTO(quiz);
@@ -53,12 +66,11 @@ public class QuizService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        QuizResult quizResult = quizResultRepository.findByQuizIdAndUserId(quizId, userId)
+        QuizResult quizResult = quizResultRepository.findByQuiz_QuizIdAndUser_Id(quizId, userId)
                 .orElse(new QuizResult(quiz, user, userAnswer));
 
         quizResult.update(userAnswer);
 
-        // isSolved 업데이트 로직
         if (quizResult.getIsCorrect() && !quiz.getIsSolved()) {
             quiz.setIsSolved(true);
             quizRepository.save(quiz);

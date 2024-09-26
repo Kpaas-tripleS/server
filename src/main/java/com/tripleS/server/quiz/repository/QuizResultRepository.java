@@ -13,7 +13,9 @@ import java.util.Optional;
 public interface QuizResultRepository extends JpaRepository<QuizResult, Long> {
     List<QuizResult> findByUser(User user);
     List<QuizResult> findByUserAndIsCorrect(User user, Boolean isCorrect);
-    Optional<QuizResult> findByQuizIdAndUserId(Long quizId, Long userId);
+    Optional<QuizResult> findByQuiz_QuizIdAndUser_Id(Long quizId, Long userId);
+
+    // 추가 메서드: 특정 조건에 따라 필터링
     List<QuizResult> findByUserAndQuizIsSolvedAndIsCorrect(User user, boolean isSolved, boolean isCorrect);
 
 }

@@ -65,7 +65,7 @@ public class ReviewService {
 
     @Transactional
     public QuizResultDto submitReviewAnswer(Long quizId, Long userId, String answer) {
-        QuizResult quizResult = quizResultRepository.findByQuizIdAndUserId(quizId, userId)
+        QuizResult quizResult = quizResultRepository.findByQuiz_QuizIdAndUser_Id(quizId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz result not found for quizId: " + quizId + " and userId: " + userId));
 
         quizResult.update(answer);

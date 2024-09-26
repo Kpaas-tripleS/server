@@ -36,6 +36,9 @@ public class Quiz {
     @Column(name = "is_solved", nullable = false)
     private Boolean isSolved = false;  // 기본값을 여기서만 설정
 
+    @Column(nullable=false)
+    private Integer incorrectCount=0;
+
     @Builder
     public Quiz(String question, String choiceOne, String choiceTwo, String choiceThree, String choiceFour, String answer) {
         this.question = question;

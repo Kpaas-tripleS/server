@@ -14,26 +14,29 @@ import java.time.LocalDateTime;
 public class QuizResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "result_id")
+    @Column(name = "id")
     private Long resultId;
 
-    @Column(name = "quiz_id", insertable = false, updatable = false)
-    private Long quizId;
-
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review review; // Review 필드 추가
+
+
+   /* @Column(name = "quiz_id", insertable = false, updatable = false)
+    private Long quizId;*/
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
-    private Review review;
+    private Review review;*/
 
     @Column(nullable = false)
     private String userAnswer;
@@ -48,8 +51,7 @@ public class QuizResult {
     public QuizResult(Quiz quiz, User user, String userAnswer) {
         this.quiz = quiz;
         this.user = user;
-        this.quizId = quiz.getQuizId();
-        this.userId = user.getId();
+       // this.userId = user.getId();
         update(userAnswer);
 
     }
@@ -59,4 +61,44 @@ public class QuizResult {
         this.isCorrect = this.quiz.getAnswer().equalsIgnoreCase(userAnswer);
         this.answeredAt = LocalDateTime.now();
     }
-}
+
+
+    // Quiz의 ID를 가져오는 메서드
+    public Long getQuizId() {
+
+        if (this.quiz != null) {
+
+            return this.quiz.getQuizId();
+        } else {
+
+            return null;
+        }
+    }
+
+    // User의 ID를 가져오는 메서드
+    public Long getUserId() {
+
+        if (this.user != null) {
+
+            return this.user.getId();
+        } else {
+
+            return null;
+        }
+    }
+
+    //Review의 ID를 가져오는 메서드; 결과에 몇번 리뷰했는지 나타냄
+    public Long getReviewId() {
+
+        if (this.review != null) {
+
+            return this.review.getReview_id();
+        } else {
+
+            return null;
+        }
+    }
+
+    }
+
+

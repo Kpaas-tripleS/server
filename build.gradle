@@ -54,6 +54,9 @@ dependencies {
 
 	//	//jsoup
 	implementation 'org.jsoup:jsoup:1.16.1'
+
+	//mac os Netty 네이티브 DNS 라이브러리를 사용
+	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
 }
 
 dependencyManagement {

@@ -6,6 +6,7 @@ import com.tripleS.server.user.domain.type.Grade;
 import com.tripleS.server.user.domain.type.LoginType;
 import com.tripleS.server.user.domain.type.Role;
 import com.tripleS.server.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -19,6 +20,7 @@ import java.util.List;
 @Slf4j
 @Order(1)
 @RequiredArgsConstructor
+@Transactional
 @DummyDataInit
 public class UserInitializer implements ApplicationRunner {
 
