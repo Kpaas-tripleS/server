@@ -38,11 +38,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u ORDER BY u.win_count DESC, u.nickname ASC")
     List<User> findUsersByWinCountDesc();
 
-    //@EntityGraph(attributePaths = {"friendList", "friendList.friend"})
-    //@Query("SELECT u FROM User u WHERE u.id = :userId ORDER BY u.win_count DESC, u.nickname ASC")
-    //Optional<User> findFriendsByWinCountDesc(Long userId);
-    @Query("SELECT f.friend FROM Friend f WHERE f.user.id = :userId ORDER BY f.friend.win_count DESC, f.friend.nickname ASC")
-    List<User> findFriendsByWinCountDesc(Long userId);
+    @Query("SELECT f.friend FROM Friend f WHERE f.user.id = :userId AND f.isAccepted = true ORDER BY f.friend.win_count DESC, f.friend.nickname ASC")
+    List<User> findFriendsOfUser(Long userId);
+    @Query("SELECT f.user FROM Friend f WHERE f.friend.id = :userId AND f.isAccepted = true ORDER BY f.friend.win_count DESC, f.friend.nickname ASC")
+    List<User> findFriendsOfFriend(Long userId);
 
     Optional<User> findByEmail(String email);
     Optional<User> findById(Long userId);
