@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class QuizResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,17 +27,9 @@ public class QuizResult {
     @JoinColumn(name = "review_id")
     private Review review; // Review 필드 추가
 
-
-   /* @Column(name = "quiz_id", insertable = false, updatable = false)
-    private Long quizId;*/
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id")
-    private Review review;*/
 
     @Column(nullable = false)
     private String userAnswer;
@@ -51,10 +44,13 @@ public class QuizResult {
     public QuizResult(Quiz quiz, User user, String userAnswer) {
         this.quiz = quiz;
         this.user = user;
-       // this.userId = user.getId();
         update(userAnswer);
-
     }
+
+    // 매개변수가 없는 기본 생성자 추가 (JPA용)
+    protected QuizResult() {
+    }
+
 
     public void update(String userAnswer) {
         this.userAnswer = userAnswer;

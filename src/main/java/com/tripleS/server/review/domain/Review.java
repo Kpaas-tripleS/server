@@ -42,4 +42,13 @@ public class Review {
         this.user = user;
         this.reviewedAt = LocalDateTime.now();
     }
+    // 기존 필드 getId와 같은 메서드 추가
+    public Long getReviewId() {
+        return this.review_id;
+    }
+
+    // 유저 ID 반환 메서드
+    public Long getUserId() {
+        return this.user.getId();
+    }
 }

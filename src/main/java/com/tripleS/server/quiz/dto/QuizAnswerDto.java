@@ -23,5 +23,4 @@ public class QuizAnswerDto {
         this.answer = answer;
     }
 
-
 }

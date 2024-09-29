@@ -36,17 +36,26 @@ public class Quiz {
     @Column(name = "is_solved", nullable = false)
     private Boolean isSolved = false;  // 기본값을 여기서만 설정
 
-    @Column(nullable=false)
-    private Integer incorrectCount=0;
+    @Column(nullable = false)
+    private Integer incorrectCount = 0;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DifficultyLevel level;
+
+    public enum DifficultyLevel {
+        BEGINNER, INTERMEDIATE, ADVANCED, RANDOM
+    }
 
     @Builder
-    public Quiz(String question, String choiceOne, String choiceTwo, String choiceThree, String choiceFour, String answer) {
+    public Quiz(String question, String choiceOne, String choiceTwo, String choiceThree, String choiceFour, String answer, DifficultyLevel level) {
         this.question = question;
         this.choiceOne = choiceOne;
         this.choiceTwo = choiceTwo;
         this.choiceThree = choiceThree;
         this.choiceFour = choiceFour;
         this.answer = answer;
-       // isSolved는 기본값인 false를 사용하므로 여기서 설정하지 않음
+        this.level = level;
+        // isSolved는 기본값인 false를 사용하므로 여기서 설정하지 않음
     }
 }

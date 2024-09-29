@@ -57,6 +57,9 @@ dependencies {
 
 	//mac os Netty 네이티브 DNS 라이브러리를 사용
 	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
+
+	//모델 mapper
+	implementation 'org.modelmapper:modelmapper:3.1.1'
 }
 
 dependencyManagement {

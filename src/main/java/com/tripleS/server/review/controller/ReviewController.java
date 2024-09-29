@@ -1,6 +1,7 @@
 package com.tripleS.server.review.controller;
 
 import com.tripleS.server.global.dto.AuthUser;
+import com.tripleS.server.quiz.domain.Quiz;
 import com.tripleS.server.quiz.dto.QuizAnswerDto;
 import com.tripleS.server.review.dto.ReviewDto;
 import com.tripleS.server.review.service.ReviewService;
@@ -21,24 +22,20 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReviewDto>> getReviewQuizzes(@AuthenticationPrincipal AuthUser authUser) {
-        List<ReviewDto> reviewQuizzes = reviewService.getReviewResult(authUser.userId());
-        if (reviewQuizzes.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(reviewQuizzes);
-    }
-
-    @GetMapping("/quiz/{quizId}")
-    public ResponseEntity<ReviewDto> getReviewQuizByQuizId(@PathVariable Long quizId) {
-        ReviewDto reviewDto = reviewService.getReviewQuizByQuizId(quizId);
+    // 랜덤한 5개의 퀴즈를 포함한 리뷰 세션을 생성하는 메서드
+    @PostMapping("/user/random-session")
+    public ResponseEntity<ReviewDto> createRandomReviewSession(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestParam(required = true) Quiz.DifficultyLevel difficulty) {
+        ReviewDto reviewDto = reviewService.createReviewSession(authUser.userId(), difficulty);
         return ResponseEntity.ok(reviewDto);
     }
 
+    // 리뷰 세션에서 특정 퀴즈의 답안을 제출하는 메서드
     @PostMapping("/quiz/{quizId}/submit")
     public ResponseEntity<?> submitReviewAnswer(@PathVariable Long quizId, @RequestBody QuizAnswerDto answerDto) {
         reviewService.submitReviewAnswer(quizId, answerDto.getUserId(), answerDto.getAnswer());
         return ResponseEntity.ok().build();
     }
+
 }

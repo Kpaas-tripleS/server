@@ -10,7 +10,10 @@ import com.tripleS.server.quiz.repository.QuizResultRepository;
 import com.tripleS.server.user.domain.User;
 import com.tripleS.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +31,9 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final QuizResultRepository quizResultRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
     private final Random random = new Random();
+
 
     public List<QuizDto> getRandomQuizzes(int count) {
         long totalQuizzes = quizRepository.countAllQuizzes();
@@ -39,6 +44,29 @@ public class QuizService {
         long totalQuizzes = quizRepository.countAllQuizzes();
         return getRandomQuizzesWithOffset(count, totalQuizzes);
     }
+
+    // 특정 퀴즈의 틀린 횟수를 조회하는 메서드
+    public long getWrongAttemptCount(Long userId, Long quizId) {
+        return quizResultRepository.countByUser_IdAndQuiz_QuizIdAndIsCorrectFalse(userId, quizId);
+    }
+
+    // 특정 사용자(userId)의 틀린 문제 중 랜덤으로 5개를 선택하여 반환하는 메서드
+    public List<QuizResultDto> getRandomIncorrectQuizzes(Long userId, Quiz.DifficultyLevel difficulty,int count) {
+        Pageable pageable = PageRequest.of(0, 5);
+        List<QuizResult> incorrectQuizzes;
+
+        if (difficulty == Quiz.DifficultyLevel.RANDOM) {
+            incorrectQuizzes = quizResultRepository.findTop5ByUserIdAndIsCorrectFalseOrderByRandom(userId, pageable);
+        } else {
+            incorrectQuizzes = quizResultRepository.findRandomIncorrectQuizzesByDifficulty(userId, difficulty, pageable);
+        }
+
+        // QuizResult를 QuizResultDto로 변환하여 리스트로 반환
+        return incorrectQuizzes.stream()
+                .map(this::convertToResultDTO)
+                .collect(Collectors.toList());
+    }
+
 
     private List<QuizDto> getRandomQuizzesWithOffset(int count, long totalQuizzes) {
         if (totalQuizzes <= count) {
@@ -115,5 +143,18 @@ public class QuizService {
         dto.setAnsweredAt(result.getAnsweredAt());
         dto.setResultId(result.getResultId());
         return dto;
+    }
+    // 수정: 난이도별 랜덤 틀린 문제를 가져오는 메서드 추가
+    public List<QuizResultDto> getRandomIncorrectQuizzesByDifficulty(Long userId, Quiz.DifficultyLevel difficulty, int count) {
+        Pageable pageable = PageRequest.of(0, count);
+        List<QuizResult> incorrectQuizzes;
+        if (difficulty == Quiz.DifficultyLevel.RANDOM) {
+            incorrectQuizzes = quizResultRepository.findRandomIncorrectQuizzes(userId, pageable);
+        } else {
+            incorrectQuizzes = quizResultRepository.findRandomIncorrectQuizzesByDifficulty(userId, difficulty, pageable);
+        }
+        return incorrectQuizzes.stream()
+                .map(this::convertToResultDTO)
+                .collect(Collectors.toList());
     }
 }
