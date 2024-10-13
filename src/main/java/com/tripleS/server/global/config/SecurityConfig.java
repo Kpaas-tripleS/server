@@ -47,12 +47,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .formLogin(AbstractHttpConfigurer::disable) // 기본 login form 비활성화
+
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP 기본 인증을 비활성화
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 기능 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth // 요청에 대한 인증 설정
                         .requestMatchers("/ws/**").permitAll() // WebSocket 경로 허용. 추가된 부분
                         .requestMatchers("/logout").hasRole(USER)
+                        .requestMatchers("/news").permitAll() // "/news" 경로 허용
+                        .requestMatchers("/summary").permitAll() // "/news" 경로 허용
                         .anyRequest().authenticated())  //이외의 요청은 전부 인증 필요
                 .exceptionHandling(exceptionHandling -> {
                     exceptionHandling

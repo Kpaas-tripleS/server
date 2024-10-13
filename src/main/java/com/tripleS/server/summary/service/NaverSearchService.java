@@ -1,5 +1,6 @@
 package com.tripleS.server.summary.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
@@ -83,16 +84,18 @@ public class NaverSearchService {
         return searchNews(query)  // 검색을 통해 랜덤 뉴스 URL을 가져옴
                 .flatMap(this::scrapeNewsContent);  // URL에 대해 본문을 추출
     }
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @Setter
     @Getter
     static class NaverSearchResponse {
         private List<Item> items;
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         @Setter
         @Getter
         static class Item {
             private String link;
+            private String title;  // JSON 필드 추가
         }
     }
 }
