@@ -19,8 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @DummyDataInit
-
-// 애플리케이션을 실행할 때마다 기존 데이터를 삭제하고 새로운 더미 데이터를 추가
 public class QuizInitializer implements ApplicationRunner {
 
     private final QuizRepository quizRepository;
@@ -205,8 +203,8 @@ public class QuizInitializer implements ApplicationRunner {
         // 개별 퀴즈 저장 및 예외 처리
         for (Quiz quiz : quizList) {
             try {
-                quizRepository.save(quiz);
-                log.info("Saved quiz: {}", quiz.getQuestion());
+                Quiz savedQuiz = quizRepository.save(quiz);  // 저장 후 ID 반환
+                log.info("Saved quiz: {} with ID: {}", savedQuiz.getQuestion(), savedQuiz.getQuizId());
             } catch (Exception e) {
                 log.error("Error saving quiz: {} - {}", quiz.getQuestion(), e.getMessage());
             }
